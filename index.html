@@ -6,78 +6,64 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Polyglot Pro">
-    
     <link rel="manifest" href="./manifest.json">
-    <title>Polyglot Pro 45.2</title>
+    <title>Polyglot Pro 46.0</title>
     <style>
         :root {
-            --bg: #0d1117; --card: rgba(22, 27, 34, 0.85); 
-            --c1: #ffcc00; --c2: #dd0000; --c3: #ffffff; 
-            --text: #c9d1d9; --secondary: #8b949e; --error: #f85149; 
+            --bg: #0d1117; --card: rgba(22, 27, 34, 0.85);
+            --c1: #ffcc00; --c2: #dd0000; --c3: #ffffff;
+            --text: #c9d1d9; --secondary: #8b949e; --error: #f85149;
             --glass-border: rgba(255, 255, 255, 0.15);
         }
-
         * { box-sizing: border-box; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: linear-gradient(135deg, #0d1117, #161b22); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; transition: --c1 0.4s, --c2 0.4s; }
         
+        /* OPTIMIZACIÓN TÁCTIL: Previene el retraso de 300ms en móviles */
+        button, .word-tap, .chip, .folder-header, .eval-btn, .sel-btn { 
+            touch-action: manipulation; 
+        }
+
+        body { font-family: -apple-system, system-ui, sans-serif; background: linear-gradient(135deg, #0d1117, #161b22); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
         svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .icon-sm { width: 18px; height: 18px; }
-
         .icon-play { width: 18px; height: 18px; fill: currentColor; stroke: currentColor; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; margin-left: 3px; }
         .btn-audio { width: 42px; height: 42px; min-width: 42px; min-height: 42px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; margin: 0; transition: all 0.2s cubic-bezier(0.1, 0.8, 0.2, 1); cursor: pointer; background: transparent; border: 2px solid var(--glass-border); color: var(--c1); }
         .btn-audio:active { transform: scale(0.85); background: var(--c1); color: #000; border-color: var(--c1); }
-
-        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--c1); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 1000; display: none; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; text-align: center; border: 2px solid rgba(255,255,255,0.2); }
-        
-        .word-tap { cursor: pointer; display: inline-block; transition: 0.1s; margin: 0 3px; line-height: 1.4;}
+        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--c1); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 10000; display: none; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; text-align: center; border: 2px solid rgba(255,255,255,0.2); }
+        .word-tap { cursor: pointer; display: inline-block; transition: 0.1s; margin: 0 3px; line-height: 1.4; }
         .word-tap:active { color: var(--c1); transform: scale(1.1); }
-
-        .timer-btn-corner { position: fixed; top: 12px; right: 15px; z-index: 100; background: rgba(22, 27, 34, 0.9); border: 1px solid var(--c3); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,0,0,0.4); backdrop-filter: blur(5px); color: var(--c3); cursor: pointer; transition: 0.2s;}
+        .timer-btn-corner { position: fixed; top: 12px; right: 15px; z-index: 100; background: rgba(22, 27, 34, 0.9); border: 1px solid var(--c3); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,0,0,0.4); backdrop-filter: blur(5px); color: var(--c3); cursor: pointer; transition: 0.2s; }
         .timer-btn-corner:active { transform: scale(0.9); }
         .timer-panel { position: fixed; top: 65px; right: 15px; z-index: 99; background: var(--card); backdrop-filter: blur(15px); padding: 20px; border-radius: 16px; border: 2px solid var(--c2); display: none; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-
-        /* NAVEGACIÓN Y TABS */
         .tabs { display: flex; background: var(--card); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); padding: 8px 65px 8px 10px; overflow-x: auto; scrollbar-width: none; }
         .tabs::-webkit-scrollbar { display: none; }
         .tab-btn { flex: none; min-width: 65px; background: transparent; border: none; color: var(--secondary); padding: 5px; font-weight: 600; font-size: 0.65rem; text-transform: uppercase; border-radius: 8px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
         .tab-btn svg { width: 20px; height: 20px; }
         .tab-btn.active { color: var(--c1); }
-
         .content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; display: none; }
         .content.active { display: block; }
-
-        /* INPUTS */
         .input-box { background: var(--card); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border); text-align: center; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        select, input[type="text"], input[type="number"] { width: 100%; background: #0d1117; border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 10px; font-size: 0.95rem; margin-bottom: 10px; outline: none; transition: 0.2s;}
+        select, input[type="text"], input[type="number"] { width: 100%; background: #0d1117; border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 10px; font-size: 0.95rem; margin-bottom: 10px; outline: none; transition: 0.2s; }
         select:focus, input[type="text"]:focus { border-color: var(--c1); }
         .qa-input-group { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
-
         .speed-btn, .btn-qa-toggle { width: 42px; height: 42px; min-width: 42px; min-height: 42px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; margin: 0; transition: all 0.2s cubic-bezier(0.1, 0.8, 0.2, 1); cursor: pointer; }
         .speed-btn { font-size: 0.75rem; font-weight: bold; background: transparent; border: 2px solid var(--glass-border); color: var(--c3); margin-right: 5px; }
         .btn-qa-toggle { background: transparent; border: 2px solid var(--glass-border); color: var(--secondary); margin-left: 5px; }
         .btn-qa-toggle.active { color: var(--c1); border-color: var(--c1); background: rgba(255,204,0,0.1); }
         .speed-btn:active, .btn-qa-toggle:active { transform: scale(0.85); background: rgba(255,255,255,0.1); }
-
-        /* MICROFONO */
         .mic-container { margin: 10px 0; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .mic-btn { width: 75px; height: 75px; min-width: 75px; min-height: 75px; flex-shrink: 0; background: var(--c2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: 0.1s; box-shadow: 0 6px 15px rgba(0,0,0,0.4); margin: 0 auto; }
         .mic-btn svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 2; }
         .mic-btn.recording { background: var(--error); transform: scale(1.1); box-shadow: 0 0 20px var(--error); }
-
-        /* BOTONES GLOBALES */
-        .btn-action { background: var(--c1); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-transform: uppercase; transition: 0.2s;}
+        .btn-action { background: var(--c1); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-transform: uppercase; transition: 0.2s; }
         .btn-action:active { transform: scale(0.95); }
         .btn-action:disabled { background: var(--secondary); color: rgba(255,255,255,0.5); cursor: not-allowed; box-shadow: none; }
-        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; font-weight: 600; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;}
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; font-weight: 600; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
         .btn-mini-action { background: none; border: none; color: var(--secondary); cursor: pointer; padding: 5px; display: flex; align-items: center; justify-content: center; transition: 0.2s; border-radius: 5px; }
-        .btn-mini-action:active { background: rgba(255, 255, 255, 0.1); transform: scale(0.9); }
-        .btn-mini-delete:active { background: rgba(248, 81, 73, 0.2); color: var(--error); }
-
-        /* CARDS & ACORDEÓN */
+        .btn-mini-action:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
+        .btn-mini-delete:active { background: rgba(248,81,73,0.2); color: var(--error); }
         .card { background: var(--card); padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--glass-border); border-left: 5px solid var(--c1); position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: 0.2s; }
         .card-es { font-weight: 600; font-size: 0.9rem; margin-bottom: 3px; color: var(--secondary); }
-        .card-target { color: var(--c3); font-size: 1.1rem; margin-bottom: 10px; font-weight: 500;}
-        
+        .card-target { color: var(--c3); font-size: 1.1rem; margin-bottom: 10px; font-weight: 500; }
         .folder-header { background: var(--card); border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; cursor: pointer; font-weight: bold; border-left: 4px solid var(--c1); transition: background 0.2s; }
         .folder-header:active { background: rgba(255,255,255,0.05); }
         .folder-header.special { border-left-color: var(--c3); color: var(--c3); }
@@ -85,31 +71,23 @@
         .folder-content.open { display: flex; flex-direction: column; }
         .chevron { transition: transform 0.3s; color: var(--secondary); }
         .folder-header.open .chevron { transform: rotate(180deg); color: var(--c1); }
-        
-        /* MODO SELECCIÓN */
         #selection-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--c1); padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 15px; z-index: 500; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
         #selection-bar.visible { bottom: 85px; }
-        .sel-btn { border: none; padding: 8px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem;}
-
-        /* ACTION SHEET & SEARCH MODAL */
+        .sel-btn { border: none; padding: 8px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; }
         .action-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(3px); }
         .action-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: var(--bg); border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px 20px; z-index: 301; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 -10px 30px rgba(0,0,0,0.5); border-top: 2px solid var(--c1); }
         .action-sheet.open { bottom: 0; }
         .action-overlay.open { display: block; opacity: 1; }
         .sheet-btn { background: var(--card); border: 1px solid var(--glass-border); color: var(--text); padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; cursor: pointer; }
-
         .search-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: var(--bg); border: 2px solid var(--c1); border-radius: 20px; padding: 20px; z-index: 302; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .search-modal.open { display: block; }
         #lang-search-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
         .lang-item { padding: 12px; border-bottom: 1px solid var(--glass-border); cursor: pointer; display: flex; justify-content: space-between; }
         .lang-item:active { background: rgba(255,255,255,0.1); }
-
-        /* GAMIFICACIÓN Y FLOW */
         .chips-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
         .chips-container::-webkit-scrollbar { display: none; }
         .chip { padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 20px; font-size: 0.85rem; white-space: nowrap; cursor: pointer; color: var(--secondary); font-weight: bold; }
         .chip.active { background: var(--c1); color: #000; border-color: var(--c1); }
-
         .training-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 400; display: none; flex-direction: column; }
         .training-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
         .close-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -117,33 +95,31 @@
         .big-word { font-size: 2.2rem; font-weight: bold; color: var(--c1); margin-bottom: 10px; line-height: 1.2; }
         .small-trans { font-size: 1.2rem; color: var(--secondary); margin-bottom: 30px; opacity: 0; }
         .small-trans.visible { opacity: 1; }
-        
-        /* MOTOR SRS (RECALL & MISION) NUEVO ESTILO MINIMALISTA */
         #practice-overlay, #report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: none; flex-direction: column; }
         .practice-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
         .practice-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; cursor: pointer; }
-        .practice-front { font-size: 1.8rem; font-weight: bold; color: var(--c3); margin-bottom: 20px; word-break: break-word; line-height: 1.3;}
+        .practice-front { font-size: 1.8rem; font-weight: bold; color: var(--c3); margin-bottom: 20px; word-break: break-word; line-height: 1.3; }
         .practice-back { display: none; flex-direction: column; align-items: center; width: 100%; }
         .practice-target { font-size: 2.2rem; font-weight: bold; color: var(--c1); margin-bottom: 5px; word-break: break-word; line-height: 1.2; }
-        .practice-es-small { font-size: 1rem; color: var(--secondary); margin-bottom: 30px; font-weight: 500;}
-        .practice-hint { color: var(--secondary); font-size: 0.9rem; border: 1px dashed var(--secondary); padding: 10px 20px; border-radius: 20px; margin-top: 40px; pointer-events: none;}
-        
-        /* BOTONES EVALUACIÓN (PILLS SUAVES) */
+        .practice-es-small { font-size: 1rem; color: var(--secondary); margin-bottom: 30px; font-weight: 500; }
+        .practice-hint { color: var(--secondary); font-size: 0.9rem; border: 1px dashed var(--secondary); padding: 10px 20px; border-radius: 20px; margin-top: 40px; pointer-events: none; }
         .eval-bar { display: none; width: 100%; gap: 12px; padding: 20px; padding-bottom: 40px; justify-content: center; }
         .eval-btn { font-size: 0.85rem; padding: 10px 15px; border-radius: 25px; flex: 1; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; background: transparent; }
         .eval-btn:active { transform: scale(0.95); }
         .eval-btn-hard { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); color: var(--error); }
         .eval-btn-med { background: rgba(210,153,34,0.1); border: 1px solid rgba(210,153,34,0.3); color: #d29922; }
         .eval-btn-done { background: rgba(46,160,67,0.1); border: 1px solid rgba(46,160,67,0.3); color: #2ea043; }
-
         .report-content { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border); overflow-y: auto; max-height: 50vh; margin-bottom: 20px; width: 100%; max-width: 400px; }
         .error-item { background: rgba(248,81,73,0.1); border-left: 3px solid var(--error); padding: 10px; margin-bottom: 10px; border-radius: 8px; text-align: left; }
-
-        /* ESCUDO DE ACTUALIZACIÓN */
-        #update-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
+        
+        /* ESCUDO DE PROTECCIÓN Y LOADER (UX) */
+        #update-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 20000; display: none; align-items: center; justify-content: center; padding: 20px; }
         #update-modal { background: var(--card); border: 2px solid var(--c1); border-radius: 20px; padding: 25px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         
-        /* SYNC ANIMATION */
+        #loader-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 15000; justify-content: center; align-items: center; flex-direction: column; color: var(--c1); }
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--c1); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         @keyframes pulseBorder { 0% { border-color: var(--c1); } 50% { border-color: rgba(255,204,0,0.2); } 100% { border-color: var(--c1); } }
         .syncing-btn { animation: pulseBorder 1.5s infinite; background: rgba(255,204,0,0.1) !important; color: var(--c1) !important; pointer-events: none; }
     </style>
@@ -152,28 +128,32 @@
 
 <div id="toast"></div>
 
+<!-- LOADER GLOBAL -->
+<div id="loader-overlay">
+    <div class="spinner"></div>
+    <h3 id="loader-text" style="margin:0; font-size:1.2rem;">Procesando...</h3>
+</div>
+
 <!-- ESCUDO DE ACTUALIZACIONES -->
 <div id="update-overlay">
     <div id="update-modal">
         <div style="color:var(--c1); margin-bottom: 15px;">
             <svg viewBox="0 0 24 24" style="width:60px; height:60px; stroke-width: 1.5;"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </div>
-        <h2 style="margin-top:0; color:var(--c3);">¡Versión 45.2 Lista!</h2>
+        <h2 style="margin-top:0; color:var(--c3);">¡Versión 46.0 Lista!</h2>
         <p style="color:var(--secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px;">
-            Motor SRS estabilizado para navegadores móviles estrictos.<br><br>
-            Tus datos están a salvo, pero como buena práctica, <b>te recomendamos descargar un respaldo</b> antes de continuar.
+            Motor Táctil Pro y Sincronización Segura.<br><br>
+            Por protocolo de seguridad, <b>te exigimos descargar un respaldo</b> antes de continuar.
         </p>
         <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-bottom: 10px;" onclick="exportBackup()">
             <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Descargar Respaldo Seguro
         </button>
-        <button class="btn-action" style="width:100%;" onclick="acceptUpdate()">CONTINUAR A LA APP</button>
+        <button class="btn-action" style="width:100%;" onclick="acceptUpdate()">ACTUALIZAR Y ENTRAR</button>
     </div>
 </div>
 
-<!-- BARRA MULTISELECCIÓN FLOTANTE -->
 <div id="selection-bar">
     <span id="sel-count" style="color:#000; font-weight:900; font-size: 1.2rem; min-width: 20px; text-align:center;">0</span>
-    
     <button class="sel-btn" style="background: var(--c3); color: #000;" onclick="startPracticeFromSelection()">
         <svg class="icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Entrenar
     </button>
@@ -181,21 +161,19 @@
         <svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><polyline points="9 14 12 17 15 14"></polyline><line x1="12" y1="9" x2="12" y2="17"></line></svg> Mover
     </button>
     <button class="sel-btn" style="background: var(--error); color: #fff; padding: 8px; flex:none;" onclick="deleteSelected()">
-        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
     </button>
     <button style="background:transparent; border:none; color:#000; font-size:1.5rem; font-weight:bold; margin-left:5px; cursor:pointer; display:flex; align-items:center;" onclick="toggleSelectionMode()">
         <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
 </div>
 
-<!-- TIMER FLOTANTE -->
 <div class="timer-btn-corner" onclick="toggleTimerPanel()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
 <div class="timer-panel" id="timer-panel">
     <div id="timer-display" style="font-size: 2.2rem; margin-bottom: 15px; font-family: monospace; font-weight: bold; color: var(--c3);">25:00</div>
     <button class="btn-action" id="timer-start-btn" onclick="toggleTimer()">INICIAR</button>
 </div>
 
-<!-- OVERLAYS (FLOW) -->
 <div id="flow-overlay" class="training-overlay">
     <div class="training-header">
         <button class="close-btn" onclick="exitFlow()"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -204,19 +182,16 @@
     <div class="training-content">
         <div class="big-word" id="flow-target">Frase</div>
         <div class="small-trans visible" id="flow-es" style="margin-bottom: 20px;">Traducción</div>
-        
         <div style="display:flex; gap:20px; align-items:center; justify-content:center; margin-bottom: 20px;">
             <button class="speed-btn" id="flow-speed" onclick="toggleBtnSpeed(this)" style="width: 50px; height: 50px; font-size: 0.85rem; border-color: var(--secondary);">1.0x</button>
             <button class="btn-audio" style="width: 75px; height: 75px; border-radius:50%;" onclick="playWithBtnSpeed('flow-target', document.getElementById('flow-speed'), null)"><svg viewBox="0 0 24 24" style="width: 35px; height: 35px;" class="icon-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
         </div>
-        
     </div>
     <div style="padding:20px; padding-bottom:40px;">
         <button class="btn-action" onclick="nextFlow()">SIGUIENTE FRASE</button>
     </div>
 </div>
 
-<!-- MOTOR SRS (RECALL Y MISION) -->
 <div id="practice-overlay">
     <div class="practice-header">
         <button class="close-btn" onclick="forceClosePractice()"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -224,7 +199,6 @@
     </div>
     <div class="practice-body" onclick="revealPractice()">
         <div id="practice-front" class="practice-front">Frente</div>
-        
         <div id="practice-back" class="practice-back">
             <div id="practice-target" class="practice-target">Palabra</div>
             <div id="practice-es-small" class="practice-es-small">Traducción</div>
@@ -233,38 +207,33 @@
                 <button class="btn-audio" style="width: 65px; height: 65px; border-radius:50%;" onclick="playPracticeAudio()"><svg viewBox="0 0 24 24" style="width: 30px; height: 30px;" class="icon-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
             </div>
         </div>
-        
         <div id="practice-hint" class="practice-hint">Toca la pantalla para revelar</div>
     </div>
+    <!-- SECCIÓN SRS: Eliminado el onclick del HTML, usa Delegación -->
     <div class="eval-bar" id="practice-eval-bar">
-        <button class="eval-btn eval-btn-hard" onclick="evaluatePractice(1)">Difícil</button>
-        <button class="eval-btn eval-btn-med" onclick="evaluatePractice(2)">Me Cuesta</button>
-        <button class="eval-btn eval-btn-done" onclick="evaluatePractice(3)">Aprendido</button>
+        <button class="eval-btn eval-btn-hard" data-score="1">Difícil</button>
+        <button class="eval-btn eval-btn-med" data-score="2">Me Cuesta</button>
+        <button class="eval-btn eval-btn-done" data-score="3">Aprendido</button>
     </div>
 </div>
 
-<!-- INFORME DE MISIÓN -->
 <div id="report-overlay" style="align-items:center; justify-content:center; padding:20px; background: rgba(13,17,23,0.98);">
     <h2 style="color:var(--c1); margin-top:0; margin-bottom:5px;">Informe de Misión</h2>
     <p style="color:var(--secondary); font-size:0.9rem; margin-top:0; margin-bottom:20px;">Palabras y frases a reforzar</p>
-    
     <div id="report-list" class="report-content"></div>
-    
     <div style="width: 100%; max-width: 400px; display:flex; flex-direction:column; gap:10px;">
-        <button class="btn-action" onclick="retryErrors()"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg> Reintentar Bloque</button>
+        <button class="btn-action" onclick="retryErrors()"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg> Reintentar Errores</button>
         <button class="btn-outline" onclick="closeReport()">Cerrar y Finalizar</button>
     </div>
 </div>
 
 <div class="action-overlay" id="action-overlay" onclick="closeAllSheets()"></div>
-
 <div class="action-sheet" id="action-sheet">
     <h3 id="sheet-title" style="margin-top:0; color:var(--c3); text-align: center;">Guardar en...</h3>
     <div id="sheet-folder-list" style="max-height: 40vh; overflow-y: auto; margin-bottom: 15px;"></div>
     <button class="btn-outline" style="border-color:var(--error); color:var(--error); width: 100%;" onclick="closeAllSheets()">Cancelar</button>
 </div>
 
-<!-- MODAL DE BÚSQUEDA DE IDIOMAS -->
 <div class="search-modal" id="lang-search-modal">
     <h3 style="margin-top:0; color:var(--c1); text-align: center;">Añadir Idioma</h3>
     <input type="text" id="lang-search-input" placeholder="Buscar idioma (ej. Ruso)..." oninput="filterLangSearch()" style="margin-bottom: 15px;">
@@ -272,10 +241,9 @@
     <button class="btn-outline" style="border-color:var(--error); color:var(--error); width: 100%;" onclick="closeAllSheets()">Cancelar</button>
 </div>
 
-<!-- MODAL DE IMPORTACIÓN MASIVA -->
 <div class="search-modal" id="bulk-modal" style="width: 95%; max-width: 500px;">
     <h3 style="margin-top:0; color:var(--c1); text-align: center;">Importador Inteligente</h3>
-    <p style="font-size:0.8rem; color:var(--secondary); text-align:center; margin-top:0;">Pega aquí el código generado por tu profesor IA.</p>
+    <p style="font-size:0.8rem; color:var(--secondary); text-align:center; margin-top:0;">Pega aquí el código generado por tu IA.</p>
     <textarea id="bulk-textarea" rows="10" style="width: 100%; background: #0d1117; border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 15px; outline: none; font-family: monospace; resize: none;" placeholder="#Carpeta: Mi Vocabulario&#10;Palabra = Significado"></textarea>
     <div style="display:flex; gap:10px;">
         <button class="btn-outline" style="border-color:var(--error); color:var(--error); flex:1;" onclick="closeAllSheets()">Cancelar</button>
@@ -283,7 +251,6 @@
     </div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
     <button class="tab-btn active" onclick="showTab('islands', this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span>Islas</span></button>
     <button class="tab-btn" onclick="showTab('folders', this)"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span>Carpetas</span></button>
@@ -292,19 +259,14 @@
     <button class="tab-btn" onclick="showTab('diccionario', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"></path></svg><span>Misión</span></button>
 </div>
 
-<!-- CONTENIDO ISLAS -->
 <div id="islands" class="content active">
     <div class="input-box">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-            <select id="lang-select" onchange="onLanguageChange()" style="font-weight:bold; margin-bottom:0; flex:1;">
-                <!-- Opciones cargadas dinámicamente -->
-            </select>
+            <select id="lang-select" onchange="onLanguageChange()" style="font-weight:bold; margin-bottom:0; flex:1;"></select>
             <button class="btn-outline" style="width:auto; flex:none; padding:12px;" onclick="openLangSearch()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </button>
         </div>
-        
-        <!-- MODO NORMAL -->
         <div id="mode-normal">
             <input type="text" id="input-es" placeholder="Escribe aquí en Español..." oninput="translateField('input-es', 'output-target')">
             <div class="mic-container">
@@ -312,34 +274,26 @@
                 <div id="mic-status" style="margin-top: 5px; font-size:0.8rem; color:var(--secondary)">Manten para hablar</div>
             </div>
             <input type="text" id="output-target" placeholder="Traducción automática..." readonly style="background:rgba(0,0,0,0.3); border-style:dashed;">
-            
             <select id="voice-select" style="font-size:0.8rem; padding:8px; margin-top:5px; margin-bottom:0; border-color:transparent;" onfocus="loadVoicesFallback()" onchange="saveVoicePreference()">
                 <option value="">Voz del sistema (Por defecto)</option>
             </select>
         </div>
-
-        <!-- MODO Q&A -->
         <div id="mode-qa" style="display: none;">
             <div class="qa-input-group">
                 <div style="text-align:left; font-size:0.75rem; color:var(--c1); font-weight:bold; margin-bottom:5px; margin-left:5px; display:flex; align-items:center; gap:5px;">
-                    <svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    PREGUNTA
+                    <svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> PREGUNTA
                 </div>
                 <input type="text" id="in-q-es" placeholder="Escribe la pregunta en Español..." oninput="translateField('in-q-es', 'out-q-target')">
                 <input type="text" id="out-q-target" placeholder="Traducción automática..." readonly style="background:rgba(0,0,0,0.3); border-style:dashed; color:var(--c1);">
             </div>
-            
             <div class="qa-input-group">
                 <div style="text-align:left; font-size:0.75rem; color:var(--c1); font-weight:bold; margin-bottom:5px; margin-left:5px; display:flex; align-items:center; gap:5px;">
-                    <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                    RESPUESTA
+                    <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> RESPUESTA
                 </div>
                 <input type="text" id="in-a-es" placeholder="Escribe la respuesta en Español..." oninput="translateField('in-a-es', 'out-a-target')">
                 <input type="text" id="out-a-target" placeholder="Traducción automática..." readonly style="background:rgba(0,0,0,0.3); border-style:dashed; color:var(--c1);">
             </div>
         </div>
-
-        <!-- MODO MANUAL -->
         <div id="mode-manual" style="display: none;">
             <div class="qa-input-group">
                 <div style="text-align:left; font-size:0.75rem; color:var(--c1); font-weight:bold; margin-bottom:5px; margin-left:5px;">IDIOMA OBJETIVO (Aprender)</div>
@@ -350,7 +304,6 @@
                 <input type="text" id="manual-es" placeholder="Pega aquí el significado...">
             </div>
         </div>
-
         <div style="display:flex; gap:10px; align-items:center; justify-content:center; margin-top:15px;">
             <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
             <button class="btn-audio" onclick="playCurrentAudio(this)"><svg class="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
@@ -361,7 +314,6 @@
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
             </button>
         </div>
-        
         <div style="margin-top:20px; display:flex; gap:10px; flex-direction:column;">
             <button class="btn-action" onclick="openFolderSheet('save_input')">GUARDAR TARJETA</button>
             <button class="btn-outline" style="border-color:var(--c1); color:var(--c1);" onclick="openBulkModal()">
@@ -369,7 +321,6 @@
             </button>
         </div>
     </div>
-    
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; padding: 0 5px;">
         <b style="color:var(--text)">Recientes</b>
         <button onclick="toggleSelectionMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card);">
@@ -379,12 +330,10 @@
     <div id="recent-list"></div>
 </div>
 
-<!-- CONTENIDO CARPETAS -->
 <div id="folders" class="content">
     <div class="input-box">
         <input type="text" id="new-folder-name" placeholder="Nueva Carpeta...">
         <button class="btn-action" onclick="createFolder()">Crear</button>
-        
         <div style="display:flex; gap:8px; margin-top:15px; padding-top:15px; border-top: 1px solid var(--glass-border);">
             <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="exportBackup()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Respaldo
@@ -395,7 +344,6 @@
             </button>
         </div>
     </div>
-
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; padding: 0 5px;">
         <b style="color:var(--text)">Mis Carpetas</b>
         <div style="display:flex; gap:8px;">
@@ -407,11 +355,9 @@
             </button>
         </div>
     </div>
-
     <div id="folders-accordion-container" style="display:flex; flex-direction:column;"></div>
 </div>
 
-<!-- CONTENIDO SHADOWING -->
 <div id="shadowing" class="content">
     <div id="shadow-chips" class="chips-container"></div>
     <div style="display:flex; gap:10px; margin-bottom: 20px;">
@@ -423,7 +369,6 @@
     <div id="shadow-list"></div>
 </div>
 
-<!-- CONTENIDO RECALL (SRS ACTUALIZADO) -->
 <div id="recall" class="content">
     <div class="input-box" style="padding: 20px; border-color:var(--c1);">
         <h2 style="margin-top:0; color:var(--c1); margin-bottom:5px;">Modo Recall (SRS)</h2>
@@ -436,7 +381,6 @@
     <div id="recall-folders" style="display:flex; flex-direction:column; gap:8px;"></div>
 </div>
 
-<!-- CONTENIDO DICCIONARIO (MISIÓN) -->
 <div id="diccionario" class="content">
     <div class="input-box" style="padding:15px">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
@@ -449,13 +393,11 @@
                 <input type="number" id="practice-limit" value="10" style="width:55px; margin:0; padding:5px; text-align:center">
             </div>
         </div>
-        
         <div style="display:flex; gap:8px; margin-bottom:15px;">
             <input type="text" id="manual-dict-target" placeholder="Nueva palabra..." style="margin-bottom:0; flex:1;">
             <input type="text" id="manual-dict-es" placeholder="Significado..." style="margin-bottom:0; flex:1;">
             <button class="btn-action" style="width:auto; padding: 0 15px;" onclick="addDictWordManual()"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
         </div>
-
         <div style="display:flex; flex-wrap: wrap; gap:8px">
             <button class="btn-outline" style="flex: 1; border-color:var(--c1); color:var(--c1); background: rgba(255,255,255,0.03);" onclick="startRoulette('words')">Practicar</button>
             <button class="btn-outline" style="flex: 1;" onclick="renderDictList()">Ver Todas</button>
@@ -470,698 +412,936 @@
 </div>
 
 <script>
-    const allLanguages = {
-        "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bengalí", "bs": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Birmano", "kn": "Canarés", "ca": "Catalán", "ceb": "Jemer", "cs": "Catalán", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Estonio", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sotho meridional", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "ta": "Tailandés", "tg": "Tayiko", "te": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú"
-    };
+// ==========================================
+// CONFIGURACIÓN E INICIALIZACIÓN BLINDADA
+// ==========================================
+const allLanguages = { "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Jemer", "kn": "Canarés", "ca": "Catalán", "ceb": "Cebuano", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Finlandés", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sindhi", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "tg": "Tayiko", "ta": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú" };
 
-    const APP_VERSION = 45.2; 
-    let db = JSON.parse(localStorage.getItem('islands_v17')) || { 
-        appVersion: APP_VERSION, 
-        folders: ["General"], 
-        sentences: [], 
-        wordStats: {}, 
-        sentenceStats: {}, 
-        uiLang: "es", 
-        activeLangs: ["de", "en", "fr", "it", "pt"],
-        savedVoices: {}, 
-        dictionaries: {} 
-    };
-    
-    if(!db.sentenceStats) db.sentenceStats = {};
-    if(!db.activeLangs) db.activeLangs = ["de", "en", "fr", "it", "pt"];
-    if(!db.savedVoices) db.savedVoices = {};
-    if(db.dictionaries["de-DE"]) { db.dictionaries["de"] = db.dictionaries["de-DE"]; delete db.dictionaries["de-DE"]; }
-    if(db.dictionaries["en-US"]) { db.dictionaries["en"] = db.dictionaries["en-US"]; delete db.dictionaries["en-US"]; }
-    
-    if(db.appVersion !== APP_VERSION) {
-        document.getElementById('update-overlay').style.display = 'flex';
+const APP_VERSION = 46.0;
+
+// Motor de persistencia Síncrono (sin bloqueos ni retrasos)
+function save() { localStorage.setItem('islands_v17', JSON.stringify(db)); }
+
+// Inicialización de Guardia de Versión
+let db;
+let rawData = localStorage.getItem('islands_v17');
+let requiresUpdate = false;
+
+if (rawData) {
+    db = JSON.parse(rawData);
+    if (db.appVersion !== APP_VERSION) { requiresUpdate = true; }
+} else {
+    db = { appVersion: APP_VERSION, folders: ["General"], sentences: [], wordStats: {}, sentenceStats: {}, uiLang: "es", activeLangs: ["de", "en", "fr", "it", "pt"], savedVoices: {}, dictionaries: {} };
+    save(); // Guardar al ser usuario nuevo
+}
+
+if (!db.sentenceStats) db.sentenceStats = {};
+if (!db.activeLangs) db.activeLangs = ["de", "en", "fr", "it", "pt"];
+if (!db.savedVoices) db.savedVoices = {};
+if (!db.dictionaries) db.dictionaries = {};
+
+if (requiresUpdate) {
+    document.getElementById('update-overlay').style.display = 'flex';
+}
+
+function acceptUpdate() {
+    db.appVersion = APP_VERSION;
+    save();
+    document.getElementById('update-overlay').style.display = 'none';
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => { for (let i of r) i.unregister(); }); }
+    location.reload();
+}
+
+// Funciones de UI Loader Asíncrono
+function showLoader(text) {
+    document.getElementById('loader-text').innerText = text || "Procesando...";
+    document.getElementById('loader-overlay').style.display = 'flex';
+}
+function hideLoader() { document.getElementById('loader-overlay').style.display = 'none'; }
+
+// ==========================================
+// EVENT DELEGATION PARA MÓVILES (Optimizado)
+// ==========================================
+document.addEventListener('click', function(e) {
+    // Para botones del Motor SRS
+    const evalBtn = e.target.closest('.eval-btn');
+    if (evalBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        evaluatePractice(parseInt(evalBtn.dataset.score));
+        return;
     }
-
-    function acceptUpdate() {
-        db.appVersion = APP_VERSION;
-        save();
-        document.getElementById('update-overlay').style.display = 'none';
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => { for(let i of r) i.unregister(); }); }
+    // Para el tap de palabras (audio de traducciones clickeables)
+    const wordTap = e.target.closest('.word-tap');
+    if (wordTap && wordTap.dataset.word) {
+        e.preventDefault();
+        e.stopPropagation();
+        translateWord(wordTap.dataset.word);
     }
+});
 
-    const baseThemes = { "de": { c1: "#ffcc00", c2: "#dd0000", c3: "#ffffff" }, "en": { c1: "#007bff", c2: "#dd0000", c3: "#ffffff" }, "fr": { c1: "#ef4135", c2: "#002654", c3: "#ffffff" }, "it": { c1: "#009246", c2: "#ce2b37", c3: "#ffffff" }, "pt": { c1: "#009c3b", c2: "#fedd00", c3: "#ffffff" } };
-    const defaultTheme = { c1: "#00a8ff", c2: "#005cbf", c3: "#ffffff" }; 
+const baseThemes = { "de": { c1: "#ffcc00", c2: "#dd0000", c3: "#ffffff" }, "en": { c1: "#007bff", c2: "#dd0000", c3: "#ffffff" }, "fr": { c1: "#ef4135", c2: "#002654", c3: "#ffffff" }, "it": { c1: "#009246", c2: "#ce2b37", c3: "#ffffff" }, "pt": { c1: "#009c3b", c2: "#fedd00", c3: "#ffffff" } };
+const defaultTheme = { c1: "#00a8ff", c2: "#005cbf", c3: "#ffffff" };
 
-    function renderLangSelect() {
-        const select = document.getElementById('lang-select');
-        select.innerHTML = db.activeLangs.map(code => `<option value="${code}">${allLanguages[code] || code}</option>`).join('');
-    }
-    renderLangSelect();
+function renderLangSelect() {
+    const select = document.getElementById('lang-select');
+    select.innerHTML = db.activeLangs.map(code => `<option value="${code}">${allLanguages[code] || code}</option>`).join('');
+}
+renderLangSelect();
 
-    function updateLanguageTheme() { 
-        const sel = document.getElementById('lang-select'); 
-        const t = baseThemes[sel.value] || defaultTheme; 
-        document.documentElement.style.setProperty('--c1', t.c1); 
-        document.documentElement.style.setProperty('--c2', t.c2); 
-        document.documentElement.style.setProperty('--c3', t.c3); 
-        updateDictTitle(); 
-        loadVoicesFallback(); 
-    }
-    
-    function updateDictTitle() { 
-        const sel = document.getElementById('lang-select'); 
-        document.getElementById('dict-title-text').innerText = "Top 2000 " + sel.options[sel.selectedIndex].text; 
-        if(document.getElementById('diccionario').classList.contains('active')) { renderDictList(); } 
-    }
+function updateLanguageTheme() {
+    const sel = document.getElementById('lang-select');
+    const t = baseThemes[sel.value] || defaultTheme;
+    document.documentElement.style.setProperty('--c1', t.c1);
+    document.documentElement.style.setProperty('--c2', t.c2);
+    document.documentElement.style.setProperty('--c3', t.c3);
+    updateDictTitle();
+    loadVoicesFallback();
+}
 
-    function openLangSearch() {
-        document.getElementById('lang-search-modal').classList.add('open');
-        document.getElementById('action-overlay').classList.add('open');
-        document.getElementById('lang-search-input').value = '';
-        filterLangSearch();
-    }
+function updateDictTitle() {
+    const sel = document.getElementById('lang-select');
+    document.getElementById('dict-title-text').innerText = "Top 2000 " + sel.options[sel.selectedIndex].text;
+    if (document.getElementById('diccionario').classList.contains('active')) { renderDictList(); }
+}
 
-    function filterLangSearch() {
-        const q = document.getElementById('lang-search-input').value.toLowerCase();
-        let html = '';
-        for (const [code, name] of Object.entries(allLanguages)) {
-            if (code === 'es') continue; 
-            if (name.toLowerCase().includes(q) || code.includes(q)) {
-                const isAdded = db.activeLangs.includes(code);
-                html += `<div class="lang-item" onclick="addLanguage('${code}')">
-                            <span>${name}</span>
-                            ${isAdded ? '<span style="color:var(--secondary)">Añadido</span>' : '<span style="color:var(--c1)">+ Añadir</span>'}
-                         </div>`;
-            }
+function openLangSearch() {
+    document.getElementById('lang-search-modal').classList.add('open');
+    document.getElementById('action-overlay').classList.add('open');
+    document.getElementById('lang-search-input').value = '';
+    filterLangSearch();
+}
+
+function filterLangSearch() {
+    const q = document.getElementById('lang-search-input').value.toLowerCase();
+    let html = '';
+    for (const [code, name] of Object.entries(allLanguages)) {
+        if (code === 'es') continue;
+        if (name.toLowerCase().includes(q) || code.includes(q)) {
+            const isAdded = db.activeLangs.includes(code);
+            html += `<div class="lang-item" onclick="addLanguage('${escAttr(code)}')">
+                        <span>${escText(name)}</span>
+                        ${isAdded ? '<span style="color:var(--secondary)">Añadido</span>' : '<span style="color:var(--c1)">+ Añadir</span>'}
+                     </div>`;
         }
-        document.getElementById('lang-search-list').innerHTML = html;
     }
+    document.getElementById('lang-search-list').innerHTML = html;
+}
 
-    function addLanguage(code) {
-        if (!db.activeLangs.includes(code)) {
-            db.activeLangs.push(code); save(); renderLangSelect();
-            document.getElementById('lang-select').value = code; onLanguageChange();
+function addLanguage(code) {
+    if (!db.activeLangs.includes(code)) {
+        db.activeLangs.push(code); save(); renderLangSelect();
+        document.getElementById('lang-select').value = code; onLanguageChange();
+    }
+    closeAllSheets();
+}
+
+function closeAllSheets() {
+    document.getElementById('action-sheet').classList.remove('open');
+    document.getElementById('lang-search-modal').classList.remove('open');
+    document.getElementById('bulk-modal').classList.remove('open');
+    setTimeout(() => document.getElementById('action-overlay').classList.remove('open'), 300);
+}
+
+let systemVoices = [];
+function loadVoicesFallback() { systemVoices = window.speechSynthesis.getVoices(); populateVoices(); }
+window.speechSynthesis.onvoiceschanged = () => { systemVoices = window.speechSynthesis.getVoices(); populateVoices(); };
+
+function populateVoices() {
+    const langCode = document.getElementById('lang-select').value;
+    const voiceSelect = document.getElementById('voice-select');
+    const availableVoices = systemVoices.filter(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase()));
+    if (availableVoices.length === 0) {
+        voiceSelect.innerHTML = `<option value="">Voz nativa no detectada (Abre Ajustes)</option>`;
+        voiceSelect.style.color = "var(--secondary)"; return;
+    }
+    voiceSelect.style.color = "var(--text)";
+    let html = `<option value="">Voz automática</option>`;
+    availableVoices.forEach(v => {
+        const isSelected = db.savedVoices[langCode] === v.name ? "selected" : "";
+        html += `<option value="${escAttr(v.name)}" ${isSelected}>${escText(v.name)} ${v.localService ? '(Local)' : ''}</option>`;
+    });
+    voiceSelect.innerHTML = html;
+}
+
+function saveVoicePreference() {
+    const langCode = document.getElementById('lang-select').value;
+    const voiceName = document.getElementById('voice-select').value;
+    if (voiceName) db.savedVoices[langCode] = voiceName; else delete db.savedVoices[langCode];
+    save();
+}
+
+function playWithBtnSpeed(textId, btn, directText) {
+    window.speechSynthesis.cancel();
+    let text = directText;
+    if (!text && textId) {
+        const el = document.getElementById(textId);
+        text = el ? (el.value || el.innerText) : '';
+    }
+    if (!text) return;
+    const msg = new SpeechSynthesisUtterance(text);
+    const lCode = document.getElementById('lang-select').value;
+    const preferredVoiceName = db.savedVoices[lCode];
+    if (preferredVoiceName) {
+        const selectedVoice = systemVoices.find(v => v.name === preferredVoiceName);
+        if (selectedVoice) msg.voice = selectedVoice;
+    } else { msg.lang = lCode; }
+    const speedBtn = btn ? (btn.parentElement ? btn.parentElement.querySelector('.speed-btn') : null) || btn : null;
+    msg.rate = speedBtn ? parseFloat(speedBtn.innerText) : 1.0;
+    window.speechSynthesis.speak(msg);
+}
+
+async function apiTranslate(text, fromCode, toCode) {
+    if (!text) return "";
+    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fromCode}&tl=${toCode}&dt=t&q=${encodeURIComponent(text)}`);
+    if (!res.ok) throw new Error("Net Error");
+    const json = await res.json();
+    let translated = "";
+    if (json && json[0]) { json[0].forEach(item => { if (item[0]) translated += item[0]; }); }
+    return translated;
+}
+
+let currentInputMode = 'normal';
+
+function toggleMode(mode) {
+    currentInputMode = currentInputMode === mode ? 'normal' : mode;
+    document.getElementById('qa-toggle-btn').classList.toggle('active', currentInputMode === 'qa');
+    document.getElementById('manual-toggle-btn').classList.toggle('active', currentInputMode === 'manual');
+    document.getElementById('mode-normal').style.display = currentInputMode === 'normal' ? 'block' : 'none';
+    document.getElementById('mode-qa').style.display = currentInputMode === 'qa' ? 'block' : 'none';
+    document.getElementById('mode-manual').style.display = currentInputMode === 'manual' ? 'block' : 'none';
+    if (currentInputMode === 'normal') { document.getElementById('input-es').value = ''; document.getElementById('output-target').value = ''; }
+    if (currentInputMode === 'qa') { ['in-q-es','out-q-target','in-a-es','out-a-target'].forEach(id => document.getElementById(id).value = ''); }
+    if (currentInputMode === 'manual') { document.getElementById('manual-es').value = ''; document.getElementById('manual-target').value = ''; }
+}
+
+function onLanguageChange() {
+    if (isTimerRunning) { clearInterval(timer); isTimerRunning = false; timeLeft = 25 * 60; document.getElementById('timer-display').innerText = '25:00'; document.getElementById('timer-start-btn').innerText = 'INICIAR'; }
+    isSelectionMode = false; selectedIds = [];
+    document.getElementById('sel-count').innerText = "0";
+    document.getElementById('selection-bar').classList.remove('visible');
+    updateLanguageTheme();
+    if (currentInputMode === 'normal') { translateField('input-es', 'output-target'); }
+    else if (currentInputMode === 'qa') { translateField('in-q-es', 'out-q-target'); translateField('in-a-es', 'out-a-target'); }
+    render();
+}
+
+let tTimer;
+async function translateField(sourceId, targetId) {
+    const text = document.getElementById(sourceId).value;
+    if (text.length < 2) { document.getElementById(targetId).value = ""; return; }
+    clearTimeout(tTimer);
+    tTimer = setTimeout(async () => {
+        const toLangCode = document.getElementById('lang-select').value;
+        try { const t = await apiTranslate(text, 'es', toLangCode); document.getElementById(targetId).value = t; } catch (e) { showToast("Error de conexión"); }
+    }, 800);
+}
+
+function escAttr(str) { return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escText(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function makeClickable(text) {
+    if (!text) return "";
+    return text.split(' ').map(w => {
+        return `<span class="word-tap" data-word="${escAttr(w)}">${escText(w)}</span>`;
+    }).join(' ');
+}
+
+async function translateWord(word) {
+    showToast('Buscando...');
+    const lCode = document.getElementById('lang-select').value;
+    const cleanWord = word.replace(/[.,!?¿¡]/g, '').toLowerCase();
+    try {
+        const localDict = db.dictionaries[lCode] || [];
+        const found = localDict.find(w => w.target.toLowerCase() === cleanWord);
+        if (found) { showToast(`${cleanWord} = ${found.es}`); }
+        else { const t = await apiTranslate(cleanWord, lCode, 'es'); showToast(`${cleanWord} = ${t.toLowerCase()}`); }
+    } catch (e) { showToast("Sin conexión"); }
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerText = msg; toast.style.display = 'block';
+    setTimeout(() => toast.style.opacity = '1', 10);
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.style.display = 'none', 200); }, 3000);
+}
+
+let isSelectionMode = false; let selectedIds = [];
+function toggleSelectionMode() {
+    isSelectionMode = !isSelectionMode; selectedIds = []; render();
+    const bar = document.getElementById('selection-bar');
+    if (isSelectionMode) bar.classList.add('visible'); else bar.classList.remove('visible');
+    document.getElementById('sel-count').innerText = "0";
+}
+function toggleSelect(id) {
+    if (!isSelectionMode) return;
+    if (selectedIds.includes(id)) selectedIds = selectedIds.filter(i => i !== id); else selectedIds.push(id);
+    renderRecent(); renderFolders(); renderShadow();
+    document.getElementById('sel-count').innerText = selectedIds.length;
+}
+function deleteSelected() {
+    if (selectedIds.length === 0) return;
+    if (confirm(`¿Eliminar ${selectedIds.length} frases seleccionadas?`)) {
+        db.sentences = db.sentences.filter(s => !selectedIds.includes(s.id));
+        selectedIds.forEach(id => delete db.sentenceStats[id]);
+        save(); toggleSelectionMode();
+    }
+}
+function deleteSentence(id) {
+    if (confirm("¿Eliminar frase?")) {
+        db.sentences = db.sentences.filter(s => s.id !== id);
+        delete db.sentenceStats[id]; save(); render();
+    }
+}
+
+let openFolders = {};
+function toggleFolderAccordion(f) { openFolders[f] = !openFolders[f]; renderFolders(); }
+
+function openSyncSheet() {
+    const toCode = document.getElementById('lang-select').value;
+    const selectEl = document.getElementById('lang-select');
+    const langName = selectEl.options[selectEl.selectedIndex].text.split(' ')[0];
+    const getEs = (s) => s.es || s.q_es || s.q || "";
+    let sheetHtml = ''; let hasSyncable = false;
+    db.folders.forEach(f => {
+        const basePhrases = db.sentences.filter(s => s.folder === f);
+        const currentLangSentences = basePhrases.filter(s => s.lang === toCode);
+        const uniqueEs = [...new Set(basePhrases.map(getEs).filter(t => t !== ""))];
+        const currentFolderEs = currentLangSentences.map(getEs);
+        let missingCount = 0;
+        uniqueEs.forEach(esText => { if (!currentFolderEs.includes(esText)) missingCount++; });
+        if (missingCount > 0) {
+            hasSyncable = true;
+            sheetHtml += `<button class="sheet-btn" onclick="syncFolderToCurrentLang('${escAttr(f)}', this)">
+                <span style="display:flex; align-items:center; gap:10px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${escText(f)}</span>
+                <span style="color:var(--c1); font-size:0.8rem;">${missingCount}</span>
+            </button>`;
         }
-        closeAllSheets();
-    }
+    });
+    if (!hasSyncable) { sheetHtml = `<div style="text-align:center; padding:20px; color:var(--secondary);">Todo sincronizado.</div>`; }
+    document.getElementById('sheet-title').innerText = "Sincronizar a " + langName;
+    document.getElementById('sheet-folder-list').innerHTML = sheetHtml;
+    document.getElementById('action-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('action-sheet').classList.add('open'), 10);
+}
 
-    function closeAllSheets() {
-        document.getElementById('action-sheet').classList.remove('open');
-        document.getElementById('lang-search-modal').classList.remove('open');
-        document.getElementById('bulk-modal').classList.remove('open');
-        setTimeout(()=> document.getElementById('action-overlay').classList.remove('open'), 300);
-    }
-
-    let systemVoices = []; let voiceLoadAttempts = 0;
-    function loadVoicesFallback() {
-        systemVoices = window.speechSynthesis.getVoices();
-        if (systemVoices.length > 0) populateVoices();
-        else if (voiceLoadAttempts < 10) { voiceLoadAttempts++; setTimeout(loadVoicesFallback, 250); } 
-        else populateVoices();
-    }
-    window.speechSynthesis.onvoiceschanged = () => { systemVoices = window.speechSynthesis.getVoices(); populateVoices(); };
-
-    function populateVoices() {
-        const langCode = document.getElementById('lang-select').value;
-        const voiceSelect = document.getElementById('voice-select');
-        const availableVoices = systemVoices.filter(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase()));
-        
-        if (availableVoices.length === 0) { voiceSelect.innerHTML = `<option value="">Voz nativa no detectada (Abre Ajustes)</option>`; voiceSelect.style.color = "var(--secondary)"; return; }
-        voiceSelect.style.color = "var(--text)";
-        let html = `<option value="">Voz automática</option>`;
-        availableVoices.forEach(v => { const isSelected = db.savedVoices[langCode] === v.name ? "selected" : ""; html += `<option value="${v.name}" ${isSelected}>${v.name} ${v.localService ? '(Local)' : ''}</option>`; });
-        voiceSelect.innerHTML = html;
-    }
-
-    function saveVoicePreference() {
-        const langCode = document.getElementById('lang-select').value;
-        const voiceName = document.getElementById('voice-select').value;
-        if(voiceName) db.savedVoices[langCode] = voiceName; else delete db.savedVoices[langCode];
-        save();
-    }
-
-    function playWithBtnSpeed(textId, btn, directText) { 
-        window.speechSynthesis.cancel(); 
-        let text = directText;
-        if (!text && textId) {
-            const el = document.getElementById(textId);
-            text = el.value || el.innerText;
+async function syncFolderToCurrentLang(folder, btnElement) {
+    try {
+        if (btnElement && btnElement.disabled) return;
+        const toCode = document.getElementById('lang-select').value;
+        const getEsText = (s) => s.es || s.q_es || s.q || "";
+        const allInFolder = db.sentences.filter(s => s.folder === folder);
+        const currentLangSentences = allInFolder.filter(s => s.lang === toCode);
+        const currentEsTexts = currentLangSentences.map(getEsText);
+        let toSync = []; const seenEs = new Set();
+        for (let s of allInFolder) {
+            const esKey = getEsText(s);
+            if (esKey !== "" && !currentEsTexts.includes(esKey) && !seenEs.has(esKey)) { toSync.push(s); seenEs.add(esKey); }
         }
-        if(!text) return; 
-        
-        const msg = new SpeechSynthesisUtterance(text); 
-        const lCode = document.getElementById('lang-select').value;
-        const preferredVoiceName = db.savedVoices[lCode];
-        if (preferredVoiceName) { const selectedVoice = systemVoices.find(v => v.name === preferredVoiceName); if (selectedVoice) msg.voice = selectedVoice; } else { msg.lang = lCode; }
-        msg.rate = parseFloat((btn.parentElement.querySelector('.speed-btn') || btn).innerText); window.speechSynthesis.speak(msg); 
+        if (toSync.length === 0) return;
+        if (btnElement) { btnElement.classList.add('syncing-btn'); btnElement.disabled = true; }
+        for (let i = 0; i < toSync.length; i++) {
+            if (btnElement) btnElement.innerHTML = `<span>Traduciendo ${i+1}/${toSync.length}...</span>`;
+            const base = toSync[i];
+            try {
+                if (base.type === 'qa') {
+                    const q_t = await apiTranslate(base.q_es || base.q || base.es || "", 'es', toCode);
+                    const a_t = await apiTranslate(base.a_es || base.a || base.target || "", 'es', toCode);
+                    db.sentences.push({ id: generateId(i), lang: toCode, folder, type: 'qa', q_es: base.q_es || base.q || base.es || "", q_target: q_t, a_es: base.a_es || base.a || base.target || "", a_target: a_t });
+                } else {
+                    const t = await apiTranslate(base.es || base.q_es || base.q || "", 'es', toCode);
+                    db.sentences.push({ id: generateId(i), lang: toCode, folder, type: 'trans', es: base.es || base.q_es || base.q || "", target: t });
+                }
+                save();
+            } catch (e) { alert("Pausa de seguridad API. Progreso guardado."); break; }
+            await new Promise(r => setTimeout(r, 2000));
+        }
+        if (btnElement) { btnElement.classList.remove('syncing-btn'); btnElement.innerHTML = `<span>✓ Listo</span>`; }
+        setTimeout(() => { closeAllSheets(); render(); }, 1500);
+    } catch (err) {
+        if (btnElement) { btnElement.classList.remove('syncing-btn'); btnElement.disabled = false; btnElement.innerText = "Error. Reintentar"; }
     }
+}
 
-    async function apiTranslate(text, fromCode, toCode) {
-        if(!text) return "";
-        try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fromCode}&tl=${toCode}&dt=t&q=${encodeURIComponent(text)}`);
-            if(!res.ok) throw new Error("Net Error");
-            const json = await res.json(); let translated = "";
-            if (json && json[0]) { json[0].forEach(item => { if (item[0]) translated += item[0]; }); }
-            return translated;
-        } catch(e) { throw new Error("API Limit"); }
+let _idCounter = 0;
+function generateId(offset = 0) { _idCounter++; return Date.now() * 1000 + _idCounter + offset + Math.floor(Math.random() * 100); }
+
+let sheetMode = ''; let sheetData = {};
+function openFolderSheet(mode, data) {
+    sheetMode = mode; sheetData = data || {};
+    if (mode === 'save_input') {
+        if (currentInputMode === 'qa') {
+            if (!document.getElementById('out-q-target').value || !document.getElementById('out-a-target').value) return alert("Espera la traducción.");
+        } else if (currentInputMode === 'manual') {
+            if (!document.getElementById('manual-target').value || !document.getElementById('manual-es').value) return alert("Llena ambas cajas.");
+        } else {
+            if (!document.getElementById('output-target').value) return alert("Espera la traducción.");
+        }
+    } else if (mode === 'move_multi' && selectedIds.length === 0) return;
+
+    let sheetHtml = db.folders.map(f =>
+        `<button class="sheet-btn" onclick="executeFolderAction('${escAttr(f)}')">
+            <span style="display:flex; align-items:center; gap:10px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${escText(f)}</span>
+            <span style="color:var(--secondary)"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+        </button>`
+    ).join('');
+    sheetHtml += `<button class="sheet-btn" style="border: 2px dashed var(--c1); justify-content: center; color: var(--c1); background: transparent;" onclick="promptNewFolderAndSave()"><svg class="icon-sm" viewBox="0 0 24 24" style="margin-right:8px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Crear Nueva Isla</button>`;
+    document.getElementById('sheet-title').innerText = (mode === 'move_multi' || mode === 'move_single') ? "Mover a..." : "Guardar en...";
+    document.getElementById('sheet-folder-list').innerHTML = sheetHtml;
+    document.getElementById('action-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('action-sheet').classList.add('open'), 10);
+}
+
+function promptNewFolderAndSave() {
+    const n = prompt("Nombre de la nueva isla:");
+    if (n && n.trim() !== "") {
+        const folderName = n.trim();
+        if (!db.folders.includes(folderName)) { db.folders.push(folderName); }
+        executeFolderAction(folderName);
     }
+}
 
-    let currentInputMode = 'normal'; 
+function executeFolderAction(folder) {
+    const lang = document.getElementById('lang-select').value;
+    if (sheetMode === 'save_input') {
+        if (currentInputMode === 'qa') {
+            db.sentences.push({ id: generateId(), lang, folder, type: 'qa', q_es: document.getElementById('in-q-es').value, q_target: document.getElementById('out-q-target').value, a_es: document.getElementById('in-a-es').value, a_target: document.getElementById('out-a-target').value });
+            ['in-q-es','out-q-target','in-a-es','out-a-target'].forEach(id => document.getElementById(id).value = '');
+        } else if (currentInputMode === 'manual') {
+            db.sentences.push({ id: generateId(), lang, folder, type: 'trans', es: document.getElementById('manual-es').value, target: document.getElementById('manual-target').value });
+            document.getElementById('manual-es').value = ''; document.getElementById('manual-target').value = '';
+        } else {
+            db.sentences.push({ id: generateId(), lang, folder, type: 'trans', es: document.getElementById('input-es').value, target: document.getElementById('output-target').value });
+            document.getElementById('input-es').value = ''; document.getElementById('output-target').value = '';
+        }
+    } else if (sheetMode === 'save_dict') {
+        db.sentences.push({ id: generateId(), es: sheetData.es, target: sheetData.target, lang, folder, type: 'trans' });
+    } else if (sheetMode === 'move_single') {
+        let s = db.sentences.find(x => x.id === sheetData.id); if (s) s.folder = folder;
+    } else if (sheetMode === 'move_multi') {
+        db.sentences.forEach(s => { if (selectedIds.includes(s.id)) s.folder = folder; });
+        toggleSelectionMode();
+    }
+    save(); closeAllSheets(); render(); showToast("Guardado.");
+}
+
+function openBulkModal() {
+    document.getElementById('bulk-textarea').value = '';
+    document.getElementById('action-overlay').classList.add('open');
+    document.getElementById('bulk-modal').classList.add('open');
+}
+
+// OPTIMIZACIÓN: Importador Masivo Asíncrono con Loader
+function processBulkImport() {
+    const text = document.getElementById('bulk-textarea').value;
+    if (!text.trim()) return alert("El cuadro de texto está vacío.");
     
-    function toggleMode(mode) {
-        currentInputMode = currentInputMode === mode ? 'normal' : mode;
-        
-        document.getElementById('qa-toggle-btn').classList.toggle('active', currentInputMode === 'qa');
-        document.getElementById('manual-toggle-btn').classList.toggle('active', currentInputMode === 'manual');
-        
-        document.getElementById('mode-normal').style.display = currentInputMode === 'normal' ? 'block' : 'none';
-        document.getElementById('mode-qa').style.display = currentInputMode === 'qa' ? 'block' : 'none';
-        document.getElementById('mode-manual').style.display = currentInputMode === 'manual' ? 'block' : 'none';
-        
-        if(currentInputMode === 'normal') { document.getElementById('input-es').value = ''; document.getElementById('output-target').value = ''; }
-        if(currentInputMode === 'qa') { document.getElementById('in-q-es').value = ''; document.getElementById('out-q-target').value = ''; document.getElementById('in-a-es').value = ''; document.getElementById('out-a-target').value = ''; }
-        if(currentInputMode === 'manual') { document.getElementById('manual-es').value = ''; document.getElementById('manual-target').value = ''; }
-    }
-
-    function onLanguageChange() {
-        isSelectionMode = false; selectedIds = []; document.getElementById('sel-count').innerText = "0"; document.getElementById('selection-bar').classList.remove('visible');
-        updateLanguageTheme(); 
-        
-        if(currentInputMode === 'normal') { translateField('input-es', 'output-target'); } 
-        else if (currentInputMode === 'qa') { translateField('in-q-es', 'out-q-target'); translateField('in-a-es', 'out-a-target'); }
-        
-        render();
-    }
-
-    let tTimer;
-    async function translateField(sourceId, targetId) {
-        const text = document.getElementById(sourceId).value;
-        if(text.length < 2) { document.getElementById(targetId).value = ""; return; }
-        clearTimeout(tTimer);
-        tTimer = setTimeout(async () => {
-            const toLangCode = document.getElementById('lang-select').value;
-            try { const t = await apiTranslate(text, 'es', toLangCode); document.getElementById(targetId).value = t; } catch(e) { showToast("Error de conexión"); }
-        }, 800);
-    }
-
-    function makeClickable(text) { 
-        if (!text) return ""; 
-        return text.split(' ').map(w => { 
-            const safeW = w.replace(/'/g, "\\'").replace(/"/g, '&quot;'); 
-            return `<span class="word-tap" onclick="translateWord('${safeW}')">${w}</span>`; 
-        }).join(' '); 
-    }
+    showLoader("Importando frases...");
     
-    async function translateWord(word) {
-        const toast = document.getElementById('toast'); toast.innerText = `Buscando...`; toast.style.display = 'block'; setTimeout(() => toast.style.opacity = '1', 10);
-        const lCode = document.getElementById('lang-select').value; const cleanWord = word.replace(/[.,!?¿¡]/g, '').toLowerCase();
-        try { 
-            const localDict = db.dictionaries[lCode] || []; const found = localDict.find(w => w.target.toLowerCase() === cleanWord);
-            if (found) { showToast(`${cleanWord} = ${found.es}`); } else { const t = await apiTranslate(cleanWord, lCode, 'es'); showToast(`${cleanWord} = ${t.toLowerCase()}`); }
-        } catch(e) { showToast("Sin conexión"); }
-    }
-    function showToast(msg) { const toast = document.getElementById('toast'); toast.innerText = msg; clearTimeout(window.toastTimer); window.toastTimer = setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.style.display = 'none', 200); }, 3000); }
-
-    let isSelectionMode = false; let selectedIds = [];
-    function toggleSelectionMode() { isSelectionMode = !isSelectionMode; selectedIds = []; render(); const bar = document.getElementById('selection-bar'); if(isSelectionMode) bar.classList.add('visible'); else bar.classList.remove('visible'); document.getElementById('sel-count').innerText = "0"; }
-    function toggleSelect(id) { if(!isSelectionMode) return; if(selectedIds.includes(id)) selectedIds = selectedIds.filter(i => i !== id); else selectedIds.push(id); render(); document.getElementById('sel-count').innerText = selectedIds.length; }
-    function deleteSelected() { 
-        if(selectedIds.length === 0) return; 
-        if(confirm(`¿Eliminar ${selectedIds.length} frases seleccionadas?`)) { 
-            db.sentences = db.sentences.filter(s => !selectedIds.includes(s.id)); 
-            selectedIds.forEach(id => delete db.sentenceStats[id]);
-            save(); toggleSelectionMode(); 
-        } 
-    }
-    function deleteSentence(id) { 
-        if(confirm("¿Eliminar frase?")) { 
-            db.sentences = db.sentences.filter(s => s.id !== id); 
-            delete db.sentenceStats[id];
-            save(); render(); 
-        } 
-    }
-
-    let openFolders = {};
-    function toggleFolderAccordion(f) { openFolders[f] = !openFolders[f]; render(); }
-
-    function openSyncSheet() {
-        const toCode = document.getElementById('lang-select').value; const selectEl = document.getElementById('lang-select'); const langName = selectEl.options[selectEl.selectedIndex].text.split(' ')[0]; const getEs = (s) => s.es || s.q_es || s.q || "";
-        let sheetHtml = ''; let hasSyncable = false;
-        db.folders.forEach(f => {
-            const basePhrases = db.sentences.filter(s => s.folder === f); const currentLangSentences = basePhrases.filter(s => s.lang === toCode);
-            const uniqueEs = [...new Set(basePhrases.map(getEs).filter(t => t !== ""))]; const currentFolderEs = currentLangSentences.map(getEs);
-            let missingCount = 0; uniqueEs.forEach(esText => { if(!currentFolderEs.includes(esText)) missingCount++; });
-            if (missingCount > 0) { hasSyncable = true; sheetHtml += `<button class="sheet-btn" onclick="syncFolderToCurrentLang('${f.replace(/'/g, "\\'")}', this)"><span style="display:flex; align-items:center; gap:10px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${f}</span><span style="color:var(--c1); font-size:0.8rem; display:flex; align-items:center; gap:4px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg> ${missingCount}</span></button>`; }
-        });
-        if (!hasSyncable) { sheetHtml = `<div style="text-align:center; padding:20px; color:var(--secondary);">Todo sincronizado.</div>`; }
-        document.getElementById('sheet-title').innerText = "Sincronizar a " + langName; document.getElementById('sheet-folder-list').innerHTML = sheetHtml; document.getElementById('action-overlay').classList.add('open'); setTimeout(()=> document.getElementById('action-sheet').classList.add('open'), 10);
-    }
-
-    async function syncFolderToCurrentLang(folder, btnElement) {
-        try {
-            if(btnElement && btnElement.disabled) return;
-            const toCode = document.getElementById('lang-select').value; const getEsText = (s) => s.es || s.q_es || s.q || "";
-            const allInFolder = db.sentences.filter(s => s.folder === folder); const currentLangSentences = allInFolder.filter(s => s.lang === toCode); const currentEsTexts = currentLangSentences.map(getEsText);
-            let toSync = []; const seenEs = new Set();
-            for(let s of allInFolder) { const esKey = getEsText(s); if(esKey !== "" && !currentEsTexts.includes(esKey) && !seenEs.has(esKey)) { toSync.push(s); seenEs.add(esKey); } }
-            if(toSync.length === 0) return;
-            if(btnElement) { btnElement.classList.add('syncing-btn'); btnElement.disabled = true; }
-            for(let i=0; i<toSync.length; i++) {
-                if(btnElement) btnElement.innerHTML = `<span style="display:flex; align-items:center; gap:10px;"><svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Traduciendo...</span><span style="color:var(--c1); font-size:0.8rem;">${i+1}/${toSync.length}</span>`;
-                const base = toSync[i];
-                try {
-                    if (base.type === 'qa') {
-                        const q_t = await apiTranslate(base.q_es || base.q || base.es || "", 'es', toCode); const a_t = await apiTranslate(base.a_es || base.a || base.target || "", 'es', toCode);
-                        db.sentences.push({ id: Date.now()+i, lang: toCode, folder, type: 'qa', q_es: base.q_es || base.q || base.es || "", q_target: q_t, a_es: base.a_es || base.a || base.target || "", a_target: a_t });
-                    } else {
-                        const t = await apiTranslate(base.es || base.q_es || base.q || "", 'es', toCode);
-                        db.sentences.push({ id: Date.now()+i, lang: toCode, folder, type: 'trans', es: base.es || base.q_es || base.q || "", target: t });
-                    }
-                    save();
-                } catch(e) { alert("Pausa de seguridad API. Progreso guardado."); break; }
-                await new Promise(r => setTimeout(r, 2000));
-            }
-            if(btnElement) { btnElement.classList.remove('syncing-btn'); btnElement.innerHTML = `<span style="display:flex; align-items:center; gap:10px;"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Listo</span>`; }
-            setTimeout(() => { closeAllSheets(); render(); }, 1500);
-        } catch(err) { if(btnElement) { btnElement.classList.remove('syncing-btn'); btnElement.disabled = false; btnElement.innerHTML = "Error. Reintentar"; } }
-    }
-
-    let sheetMode = ''; let sheetData = {};
-    function openFolderSheet(mode, data) {
-        sheetMode = mode; sheetData = data || {};
-        
-        if(mode === 'save_input') { 
-            if(currentInputMode === 'qa') {
-                if (!document.getElementById('out-q-target').value || !document.getElementById('out-a-target').value) return alert("Espera la traducción.");
-            } else if (currentInputMode === 'manual') {
-                if (!document.getElementById('manual-target').value || !document.getElementById('manual-es').value) return alert("Llena ambas cajas.");
-            } else {
-                if (!document.getElementById('output-target').value) return alert("Espera la traducción.");
-            }
-        } 
-        else if (mode === 'move_multi' && selectedIds.length === 0) return;
-        
-        let sheetHtml = db.folders.map(f => `<button class="sheet-btn" onclick="executeFolderAction('${f.replace(/'/g, "\\'")}')"><span style="display:flex; align-items:center; gap:10px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${f}</span><span style="color:var(--secondary)"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></span></button>`).join('');
-        sheetHtml += `<button class="sheet-btn" style="border: 2px dashed var(--c1); justify-content: center; color: var(--c1); background: transparent;" onclick="promptNewFolderAndSave()"><svg class="icon-sm" viewBox="0 0 24 24" style="margin-right:8px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Crear Nueva Isla</button>`;
-        
-        document.getElementById('sheet-title').innerText = (mode === 'move_multi' || mode === 'move_single') ? "Mover a..." : "Guardar en...";
-        document.getElementById('sheet-folder-list').innerHTML = sheetHtml; 
-        document.getElementById('action-overlay').classList.add('open'); setTimeout(()=> document.getElementById('action-sheet').classList.add('open'), 10);
-    }
-    
-    function promptNewFolderAndSave() { const n = prompt("Nombre de la nueva isla:"); if(n && n.trim() !== "") { const folderName = n.trim(); if(!db.folders.includes(folderName)) { db.folders.push(folderName); } executeFolderAction(folderName); } }
-    
-    function executeFolderAction(folder) {
-        const lang = document.getElementById('lang-select').value;
-        if(sheetMode === 'save_input') { 
-            if(currentInputMode === 'qa') {
-                db.sentences.push({ id: Date.now(), lang, folder, type: 'qa', q_es: document.getElementById('in-q-es').value, q_target: document.getElementById('out-q-target').value, a_es: document.getElementById('in-a-es').value, a_target: document.getElementById('out-a-target').value });
-                document.getElementById('in-q-es').value = ""; document.getElementById('out-q-target').value = ""; document.getElementById('in-a-es').value = ""; document.getElementById('out-a-target').value = "";
-            } else if (currentInputMode === 'manual') {
-                db.sentences.push({ id: Date.now(), lang, folder, type: 'trans', es: document.getElementById('manual-es').value, target: document.getElementById('manual-target').value }); 
-                document.getElementById('manual-es').value = ""; document.getElementById('manual-target').value = ""; 
-            } else {
-                db.sentences.push({ id: Date.now(), lang, folder, type: 'trans', es: document.getElementById('input-es').value, target: document.getElementById('output-target').value }); 
-                document.getElementById('input-es').value = ""; document.getElementById('output-target').value = ""; 
-            }
-        } 
-        else if(sheetMode === 'save_dict') { db.sentences.push({ id: Date.now(), es: sheetData.es, target: sheetData.target, lang, folder, type: 'trans' }); } 
-        else if(sheetMode === 'move_single') { let s = db.sentences.find(x => x.id === sheetData.id); if(s) s.folder = folder; } 
-        else if(sheetMode === 'move_multi') { db.sentences.forEach(s => { if(selectedIds.includes(s.id)) s.folder = folder; }); toggleSelectionMode(); }
-        save(); closeAllSheets(); render(); showToast("Guardado.");
-    }
-
-    // --- IMPORTADOR MASIVO ---
-    function openBulkModal() {
-        document.getElementById('bulk-textarea').value = '';
-        document.getElementById('action-overlay').classList.add('open');
-        document.getElementById('bulk-modal').classList.add('open');
-    }
-
-    function processBulkImport() {
-        const text = document.getElementById('bulk-textarea').value;
-        if (!text.trim()) return alert("El cuadro de texto está vacío.");
-        
+    // Ceder el hilo al UI para que pinte el loader
+    setTimeout(() => {
         const lines = text.split('\n');
         const lang = document.getElementById('lang-select').value;
         let currentFolder = "General";
-        let addedCount = 0;
-        let duplicateCount = 0;
-        let tempQA = null;
-
+        let addedCount = 0; let duplicateCount = 0; let tempQA = null;
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i].trim();
             if (!line) continue;
-
             if (line.toLowerCase().startsWith('#carpeta:')) {
-                let folderName = line.substring(9).trim().replace(/\*/g, ''); 
-                if (folderName) {
-                    currentFolder = folderName;
-                    if (!db.folders.includes(currentFolder)) db.folders.push(currentFolder);
-                }
+                let folderName = line.substring(9).trim().replace(/\*/g, '');
+                if (folderName) { currentFolder = folderName; if (!db.folders.includes(currentFolder)) db.folders.push(currentFolder); }
                 continue;
             }
-
             let delimiterIdx = line.indexOf('=');
             if (delimiterIdx === -1) delimiterIdx = line.indexOf('-');
-            
             if (delimiterIdx !== -1) {
                 let leftPart = line.substring(0, delimiterIdx).trim().replace(/\*\*/g, '');
                 let rightPart = line.substring(delimiterIdx + 1).trim().replace(/\*\*/g, '');
-
                 if (leftPart.toUpperCase().startsWith('Q:')) {
                     tempQA = { q_target: leftPart.substring(2).trim(), q_es: rightPart };
-                } 
-                else if (leftPart.toUpperCase().startsWith('A:') && tempQA) {
-                    let targetA = leftPart.substring(2).trim();
+                } else if (leftPart.toUpperCase().startsWith('A:') && tempQA) {
                     const exists = db.sentences.some(s => s.folder === currentFolder && s.lang === lang && s.type === 'qa' && s.q_target === tempQA.q_target);
-                    
                     if (!exists) {
-                        db.sentences.push({ id: Date.now() + addedCount, lang: lang, folder: currentFolder, type: 'qa', q_es: tempQA.q_es, q_target: tempQA.q_target, a_es: rightPart, a_target: targetA });
+                        db.sentences.push({ id: generateId(), lang, folder: currentFolder, type: 'qa', q_es: tempQA.q_es, q_target: tempQA.q_target, a_es: rightPart, a_target: leftPart.substring(2).trim() });
                         addedCount++;
                     } else { duplicateCount++; }
                     tempQA = null;
-                } 
-                else {
+                } else {
                     const exists = db.sentences.some(s => s.folder === currentFolder && s.lang === lang && s.type === 'trans' && s.target === leftPart);
                     if (!exists) {
-                        db.sentences.push({ id: Date.now() + addedCount, lang: lang, folder: currentFolder, type: 'trans', es: rightPart, target: leftPart });
+                        db.sentences.push({ id: generateId(), lang, folder: currentFolder, type: 'trans', es: rightPart, target: leftPart });
                         addedCount++;
                     } else { duplicateCount++; }
                 }
             }
         }
         save(); render(); closeAllSheets();
-        showToast(`¡Importado! ${addedCount} guardadas.`);
-    }
+        hideLoader();
+        showToast(`¡Importado! ${addedCount} guardadas${duplicateCount > 0 ? `, ${duplicateCount} duplicadas` : ''}.`);
+    }, 50);
+}
 
-    function toggleBtnSpeed(btn) { 
-        const speeds = ["1.0x", "0.75x", "0.5x", "1.25x", "1.5x"]; 
-        btn.innerText = speeds[(speeds.indexOf(btn.innerText) + 1) % speeds.length]; 
-    }
-    
-    function playCurrentAudio(btn) { 
-        if(currentInputMode === 'qa') { playWithBtnSpeed('out-a-target', btn); } 
-        else if(currentInputMode === 'manual') { playWithBtnSpeed('manual-target', btn); }
-        else { playWithBtnSpeed('output-target', btn); } 
-    }
-    
-    let rec = null; if ('webkitSpeechRecognition' in window) { rec = new webkitSpeechRecognition(); rec.lang = 'es-ES'; rec.continuous = true; rec.interimResults = true; rec.onresult = (e) => { 
-        const transcript = e.results[e.results.length-1][0].transcript;
-        if(currentInputMode === 'qa') { document.getElementById('in-q-es').value = transcript; translateField('in-q-es', 'out-q-target'); } 
+function toggleBtnSpeed(btn) {
+    const speeds = ["1.0x", "0.75x", "0.5x", "1.25x", "1.5x"];
+    btn.innerText = speeds[(speeds.indexOf(btn.innerText) + 1) % speeds.length];
+}
+
+function playCurrentAudio(btn) {
+    if (currentInputMode === 'qa') { playWithBtnSpeed('out-a-target', btn, null); }
+    else if (currentInputMode === 'manual') { playWithBtnSpeed('manual-target', btn, null); }
+    else { playWithBtnSpeed('output-target', btn, null); }
+}
+
+let rec = null;
+if ('webkitSpeechRecognition' in window) {
+    rec = new webkitSpeechRecognition();
+    rec.lang = 'es-ES'; rec.continuous = true; rec.interimResults = true;
+    rec.onresult = (e) => {
+        const transcript = e.results[e.results.length - 1][0].transcript;
+        if (currentInputMode === 'qa') { document.getElementById('in-q-es').value = transcript; translateField('in-q-es', 'out-q-target'); }
         else if (currentInputMode === 'normal') { document.getElementById('input-es').value = transcript; translateField('input-es', 'output-target'); }
-    }; }
-    const mBtn = document.getElementById('mic-btn'); mBtn.addEventListener('touchstart', (e) => { e.preventDefault(); if(rec && currentInputMode !== 'manual') { rec.start(); mBtn.classList.add('recording'); } }); mBtn.addEventListener('touchend', () => { if(rec) rec.stop(); mBtn.classList.remove('recording'); });
-    
-    // MEJORA UX RESPALDOS
-    function exportBackup() { 
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); 
-        const dlAnchorElem = document.createElement('a'); 
-        dlAnchorElem.setAttribute("href", dataStr); 
-        dlAnchorElem.setAttribute("download", "polyglot_respaldo.json"); 
-        dlAnchorElem.click(); 
-        showToast("Respaldo descargado");
-    }
-    
-    function importBackup() { 
-        const input = document.getElementById('backup-upload');
-        const file = input.files[0]; 
-        if(!file) return; 
-        const reader = new FileReader(); 
-        reader.onload = function(e) { 
-            try { 
-                const importedDb = JSON.parse(e.target.result); 
-                if(importedDb && importedDb.folders && importedDb.sentences) { 
-                    db = importedDb; save(); 
-                    showToast("¡Datos restaurados con éxito!"); 
-                    setTimeout(() => location.reload(), 1500); 
-                } else { showToast("Archivo inválido."); } 
-            } catch(err) { showToast("Error al leer archivo."); } 
-        }; 
-        reader.readAsText(file); 
-        input.value = ''; 
-    }
+    };
+}
+const mBtn = document.getElementById('mic-btn');
+mBtn.addEventListener('touchstart', (e) => { e.preventDefault(); if (rec && currentInputMode !== 'manual') { rec.start(); mBtn.classList.add('recording'); } });
+mBtn.addEventListener('touchend', () => { if (rec) rec.stop(); mBtn.classList.remove('recording'); });
 
-    function importDictionary() { 
-        const input = document.getElementById('dict-upload');
-        const file = input.files[0]; 
-        if (!file) return; 
-        const lang = document.getElementById('lang-select').value; 
-        const reader = new FileReader(); 
-        reader.onload = function(e) { 
-            const lines = e.target.result.split('\n'); 
-            let count = 0; 
-            if(!db.dictionaries[lang]) db.dictionaries[lang] = []; 
-            lines.forEach(line => { 
-                if(line.includes(';')) { 
-                    const parts = line.split(';'); 
-                    const target = parts[0].trim(); 
-                    const es = parts[1].trim(); 
-                    if(target && es) { 
-                        if(!db.dictionaries[lang].some(w => w.target.toLowerCase() === target.toLowerCase())) { 
-                            db.dictionaries[lang].push({target, es}); 
-                            count++; 
-                        } 
-                    } 
-                } 
-            }); 
+function exportBackup() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+    const a = document.createElement('a');
+    a.setAttribute("href", dataStr);
+    a.setAttribute("download", "polyglot_respaldo.json");
+    a.click();
+    showToast("Respaldo descargado");
+}
+
+// OPTIMIZACIÓN: Restauración asíncrona con Loader
+function importBackup() {
+    const input = document.getElementById('backup-upload');
+    const file = input.files[0]; if (!file) return;
+    
+    showLoader("Restaurando base de datos...");
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        setTimeout(() => {
+            try {
+                const importedDb = JSON.parse(e.target.result);
+                if (importedDb && importedDb.folders && importedDb.sentences) {
+                    db = importedDb;
+                    db.appVersion = APP_VERSION; // auto-versiona el respaldo
+                    save();
+                    hideLoader();
+                    showToast("¡Datos restaurados con éxito!");
+                    setTimeout(() => location.reload(), 1500);
+                } else { hideLoader(); showToast("Archivo inválido."); }
+            } catch (err) { hideLoader(); showToast("Error al leer archivo."); }
+        }, 50);
+    };
+    reader.readAsText(file);
+    input.value = '';
+}
+
+// OPTIMIZACIÓN: Carga de Diccionario asíncrona con Loader
+function importDictionary() {
+    const input = document.getElementById('dict-upload');
+    const file = input.files[0]; if (!file) return;
+    const lang = document.getElementById('lang-select').value;
+    
+    showLoader("Procesando diccionario...");
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        setTimeout(() => {
+            const lines = e.target.result.split('\n');
+            let count = 0;
+            if (!db.dictionaries[lang]) db.dictionaries[lang] = [];
+            
+            // Set temporal para búsqueda en O(1)
+            const dictSet = new Set(db.dictionaries[lang].map(w => w.target.toLowerCase()));
+            const newWords = [];
+            
+            lines.forEach(line => {
+                if (line.includes(';')) {
+                    const parts = line.split(';');
+                    const target = parts[0].trim(); const es = parts[1].trim();
+                    if (target && es) {
+                        const targetLower = target.toLowerCase();
+                        if (!dictSet.has(targetLower)) {
+                            newWords.push({ target, es });
+                            dictSet.add(targetLower);
+                            count++;
+                        }
+                    }
+                }
+            });
+            db.dictionaries[lang].push(...newWords);
             save(); 
+            hideLoader();
             showToast(`Añadidas ${count} palabras.`); 
-            renderDictList(); 
-            input.value = ''; 
-        }; 
-        reader.readAsText(file); 
-    }
-    
-    function addDictWordManual() { const lang = document.getElementById('lang-select').value; const target = document.getElementById('manual-dict-target').value.trim(); const es = document.getElementById('manual-dict-es').value.trim(); if(target && es) { if(!db.dictionaries[lang].some(w => w.target.toLowerCase() === target.toLowerCase())) { db.dictionaries[lang].push({target, es}); save(); document.getElementById('manual-dict-target').value = ''; document.getElementById('manual-dict-es').value = ''; renderDictList(); showToast(`Agregada.`); } } }
-    function deleteDictWord(target) { if(confirm(`¿Eliminar '${target}'?`)) { const lang = document.getElementById('lang-select').value; db.dictionaries[lang] = db.dictionaries[lang].filter(w => w.target !== target); delete db.wordStats[target]; save(); renderDictList(); } }
+            renderDictList();
+            input.value = '';
+        }, 50);
+    };
+    reader.readAsText(file);
+}
 
-    function renderDictList() {
-        const lang = document.getElementById('lang-select').value; const currentDict = db.dictionaries[lang] || []; const q = document.getElementById('dict-search').value.toLowerCase(); const filtered = currentDict.filter(w => w.target.toLowerCase().includes(q) || w.es.toLowerCase().includes(q));
-        document.getElementById('dict-container').innerHTML = filtered.map(w => {
-            const stat = db.wordStats[w.target] || 0;
-            return `<div class="card" style="border-left-color: ${stat==1?'var(--error)':stat==2?'#d29922':stat==3?'var(--c1)':'var(--glass-border)'}">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><b style="color:var(--c1); font-size:1.1rem;">${w.target}</b><br><small>${w.es}</small></div>
-                    <div style="display:flex; gap:5px; align-items:center;">
-                        <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
-                        <button class="btn-audio" onclick="playWithBtnSpeed(null, this, '${w.target.replace(/'/g,"\\'")}')"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
-                        <button class="btn-audio" style="background:var(--c1); color:#000;" onclick="openFolderSheet('save_dict', {target: '${w.target.replace(/'/g,"\\'")}', es: '${w.es.replace(/'/g,"\\'")}'})"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
-                        <button class="btn-mini-action btn-mini-delete" onclick="deleteDictWord('${w.target.replace(/'/g,"\\'")}')"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    let activeShadowFolder = "Todo"; let fQueue = []; let fIdx = 0; let fTimerInterval; let fTime = 0;
-    function setShadowFolder(folder) { activeShadowFolder = folder; render(); }
-    function startFlowMode() { 
-        const lang = document.getElementById('lang-select').value; let pool = db.sentences.filter(s => s.lang === lang); 
-        if(activeShadowFolder !== "Todo" && activeShadowFolder !== "_ALL_") pool = pool.filter(s => s.folder === activeShadowFolder); 
-        if(pool.length === 0) return alert("Vacio."); 
-        fQueue = pool.sort(() => 0.5 - Math.random()); fIdx = 0; fTime = 0; 
-        document.getElementById('flow-overlay').style.display = 'flex'; document.getElementById('flow-timer-display').innerText = "00:00"; 
-        fTimerInterval = setInterval(() => { fTime++; const m = Math.floor(fTime/60).toString().padStart(2,'0'); const s = (fTime%60).toString().padStart(2,'0'); document.getElementById('flow-timer-display').innerText = `${m}:${s}`; }, 1000); 
-        loadFlowCard(); 
-    }
-    function loadFlowCard() { 
-        if(fIdx >= fQueue.length) { fIdx = 0; fQueue = fQueue.sort(() => 0.5 - Math.random()); } const s = fQueue[fIdx];
-        if (s.type === 'qa') {
-            document.getElementById('flow-target').innerHTML = "<span style='color:var(--c1)'>A:</span> " + makeClickable(s.a_target); document.getElementById('flow-es').innerText = "Q: " + s.q_target; playWithBtnSpeed(null, document.getElementById('flow-speed'), s.a_target); 
-        } else {
-            const tText = s.target || s.a_target || s.q_target; const esText = s.es || s.a_es || s.q_es;
-            document.getElementById('flow-target').innerHTML = makeClickable(tText); document.getElementById('flow-es').innerText = esText; playWithBtnSpeed(null, document.getElementById('flow-speed'), tText); 
-        }
-    }
-    function nextFlow() { fIdx++; loadFlowCard(); }
-    function exitFlow() { document.getElementById('flow-overlay').style.display = 'none'; clearInterval(fTimerInterval); }
-
-    function showTab(t, btnParam) { document.querySelectorAll('.content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(t).classList.add('active'); btnParam.classList.add('active'); if(t === 'diccionario') renderDictList(); else render(); }
-    
-    function generateCardHtml(s) {
-        const isSel = selectedIds.includes(s.id); const style = isSelectionMode ? (isSel ? 'border-color:var(--c1); background:rgba(255,204,0,0.1);' : 'border-color:var(--glass-border); opacity:0.7;') : ''; const clickEvent = isSelectionMode ? `onclick="toggleSelect(${s.id})"` : '';
-        let topPart = ''; let bottomPart = ''; let audioTarget = '';
-        if (s.type === 'qa' && s.q_target) {
-            topPart = `<div class="card-es" style="opacity:0.7; font-size:0.8rem; margin-bottom:2px;">Q: ${s.q_es}</div><div class="card-target" style="font-size:1rem; margin-bottom:10px;"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">Q:</span>${makeClickable(s.q_target)}<button class="btn-mini-action" style="display:inline-flex; padding:2px; vertical-align:middle; margin-left:5px;" onclick="playWithBtnSpeed(null, this.parentElement.parentElement.querySelector('.speed-btn'), '${s.q_target.replace(/'/g,"\\'")}')"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button></div>`;
-            bottomPart = `<div class="card-es" style="opacity:0.7; font-size:0.8rem; margin-bottom:2px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:5px;">A: ${s.a_es}</div><div class="card-target"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">A:</span>${makeClickable(s.a_target)}</div>`;
-            audioTarget = s.a_target;
-        } else if (s.type === 'qa') {
-            topPart = `<div class="card-es" style="margin-bottom: 8px;"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">Q:</span>${makeClickable(s.q || s.es)}</div>`;
-            bottomPart = `<div class="card-target"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">A:</span>${makeClickable(s.a || s.target)}</div>`;
-            audioTarget = s.a || s.target;
-        } else {
-            topPart = `<div class="card-es">${s.es}</div>`; bottomPart = `<div class="card-target">${makeClickable(s.target)}</div>`; audioTarget = s.target;
-        }
-        return `<div class="card" style="${style}" ${clickEvent}><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;"><div style="font-size:0.8rem; color:var(--secondary); display:flex; align-items:center; gap:5px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${s.folder}</div>${isSelectionMode ? `<input type="checkbox" ${isSel ? 'checked' : ''} style="transform:scale(1.5); pointer-events:none;">` : `<div style="display:flex; gap:0px;"><button class="btn-mini-action" onclick="openFolderSheet('move_single', {id: ${s.id}})"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button><button class="btn-mini-action btn-mini-delete" onclick="deleteSentence(${s.id})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>`}</div>${topPart}${bottomPart}<div style="display:flex; align-items:center; gap:5px; margin-top:5px; ${isSelectionMode ? 'pointer-events:none; opacity:0.5;' : ''}"><button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button><button class="btn-audio" onclick="playWithBtnSpeed(null, this, '${audioTarget.replace(/'/g,"\\'")}')"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button></div></div>`;
-    }
-
-    function render() {
-        const currentLang = document.getElementById('lang-select').value; const langSentences = db.sentences.filter(s => s.lang === currentLang);
-        document.getElementById('recent-list').innerHTML = langSentences.slice().reverse().slice(0,10).map(s => generateCardHtml(s)).join('');
-        let accHtml = ''; const allCount = langSentences.length; const allIsOpen = openFolders['_ALL_'];
-        accHtml += `<div class="folder-header special ${allIsOpen ? 'open' : ''}" onclick="toggleFolderAccordion('_ALL_')"><div style="display:flex; align-items:center;"><svg class="icon-sm" style="margin-right:8px" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Todas las frases</div><div style="display:flex; align-items:center; gap: 10px;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8">${allCount} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div><div class="folder-content ${allIsOpen ? 'open' : ''}">${allIsOpen ? langSentences.slice().reverse().map(s => generateCardHtml(s)).join('') : ''}</div>`;
-        db.folders.forEach(f => { const fSentences = langSentences.filter(s => s.folder === f); const isOpen = openFolders[f]; accHtml += `<div class="folder-header ${isOpen ? 'open' : ''}" onclick="toggleFolderAccordion('${f}')"><div style="display:flex; align-items:center;"><svg class="icon-sm" style="margin-right:8px" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>${f}</div><div style="display:flex; align-items:center;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8; margin-right:8px;">${fSentences.length} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div><div class="folder-content ${isOpen ? 'open' : ''}">${isOpen ? fSentences.slice().reverse().map(s => generateCardHtml(s)).join('') : ''}</div>`; });
-        document.getElementById('folders-accordion-container').innerHTML = accHtml;
-        document.getElementById('shadow-chips').innerHTML = ["Todo", ...db.folders].map(f => `<div class="chip ${activeShadowFolder === f ? 'active' : ''}" onclick="setShadowFolder('${f}')">${f === 'Todo' ? 'Todo' : f}</div>`).join('');
-        let shadowPool = langSentences; if(activeShadowFolder !== "Todo" && activeShadowFolder !== "_ALL_") shadowPool = shadowPool.filter(s => s.folder === activeShadowFolder);
-        document.getElementById('shadow-list').innerHTML = shadowPool.slice().reverse().map(s => generateCardHtml(s)).join('');
-        
-        // RECALL TABS UPDATE
-        document.getElementById('recall-folders').innerHTML = db.folders.map(f => {
-            const count = langSentences.filter(s => s.folder === f).length;
-            return count > 0 ? `<button class="btn-outline" style="justify-content:space-between; width:100%; border-color:var(--glass-border);" onclick="startPracticeByFolder('${f}')"><span>📁 ${f}</span><span style="color:var(--secondary); font-weight:normal;">${count} frases</span></button>` : '';
-        }).join('');
-    }
-
-    function createFolder() { const n = document.getElementById('new-folder-name').value; if(n && !db.folders.includes(n)) { db.folders.push(n); save(); render(); document.getElementById('new-folder-name').value="";} }
-    
-    // ==========================================
-    // MOTOR SRS (RECALL & MISIÓN)
-    // ==========================================
-    let pQueue = []; let pOriginalQueue = []; let pIdx = 0; let pType = 'sentences'; let sessionErrors = []; let isPracticeRevealed = false;
-
-    function startPracticeFromSelection() {
-        if(selectedIds.length === 0) return;
-        const pool = db.sentences.filter(s => selectedIds.includes(s.id));
-        toggleSelectionMode();
-        initPracticeSession(pool, 'sentences');
-    }
-
-    function startPracticeByFolder(folder) {
-        const lang = document.getElementById('lang-select').value;
-        const pool = db.sentences.filter(s => s.lang === lang && s.folder === folder);
-        if(pool.length === 0) return alert("Carpeta vacía en este idioma.");
-        initPracticeSession(pool, 'sentences');
-    }
-
-    function startRoulette(type) {
-        const lang = document.getElementById('lang-select').value;
-        let pool = [];
-        let limit = 10;
-        
-        if (type === 'sentences') {
-            pool = db.sentences.filter(s => s.lang === lang);
-        } else {
-            pool = db.dictionaries[lang] || [];
-            limit = parseInt(document.getElementById('practice-limit').value) || 10;
-            let pending = pool.filter(w => (db.wordStats[w.target] || 0) !== 3);
-            if(pending.length > 0) pool = pending;
-        }
-        
-        if(pool.length === 0) return alert("Agrega datos primero para practicar.");
-        
-        const getStat = (item) => type === 'sentences' ? (db.sentenceStats[item.id] || 0) : (db.wordStats[item.target] || 0);
-        pool = pool.sort(() => Math.random() - 0.5);
-        pool = pool.sort((a, b) => {
-            const sA = getStat(a); const sB = getStat(b);
-            if (sA < 3 && sB === 3) return -1;
-            if (sB < 3 && sA === 3) return 1;
-            return 0;
-        });
-        
-        initPracticeSession(pool.slice(0, limit), type);
-    }
-
-    function initPracticeSession(queue, type) {
-        pQueue = queue; pOriginalQueue = [...queue]; pIdx = 0; pType = type; sessionErrors = [];
-        document.getElementById('practice-overlay').style.display = 'flex';
-        loadPracticeCard();
-    }
-
-    function loadPracticeCard() {
-        if(pIdx >= pQueue.length) return endPracticeSession();
-        isPracticeRevealed = false;
-        const item = pQueue[pIdx];
-        document.getElementById('practice-progress').innerText = `${pIdx + 1}/${pQueue.length}`;
-        
-        let esText = (pType === 'sentences' && item.type === 'qa') ? `Q: ${item.q_es}` : item.es;
-        let tText = (pType === 'sentences' && item.type === 'qa') ? `A: ${item.a_target}` : item.target;
-
-        document.getElementById('practice-front').innerText = esText;
-        document.getElementById('practice-target').innerHTML = makeClickable(tText);
-        document.getElementById('practice-es-small').innerText = esText;
-        
-        document.getElementById('practice-front').style.display = 'block';
-        document.getElementById('practice-back').style.display = 'none';
-        document.getElementById('practice-eval-bar').style.display = 'none';
-        document.getElementById('practice-hint').style.display = 'block';
-    }
-
-    function revealPractice() {
-        if(isPracticeRevealed) return;
-        isPracticeRevealed = true;
-        document.getElementById('practice-front').style.display = 'none';
-        document.getElementById('practice-back').style.display = 'flex';
-        document.getElementById('practice-eval-bar').style.display = 'flex';
-        document.getElementById('practice-hint').style.display = 'none';
-        playPracticeAudio();
-    }
-
-    function playPracticeAudio() {
-        const item = pQueue[pIdx];
-        if(!item) return;
-        let tText = (pType === 'sentences' && item.type === 'qa') ? item.a_target : item.target;
-        playWithBtnSpeed(null, document.getElementById('practice-speed'), tText);
-    }
-
-    function evaluatePractice(score) {
-        const item = pQueue[pIdx];
-        if(!item) return;
-        
-        if(pType === 'sentences') { db.sentenceStats[item.id] = score; } 
-        else { db.wordStats[item.target] = score; }
+function addDictWordManual() {
+    const lang = document.getElementById('lang-select').value;
+    const target = document.getElementById('manual-dict-target').value.trim();
+    const es = document.getElementById('manual-dict-es').value.trim();
+    if (!target || !es) return;
+    if (!db.dictionaries[lang]) db.dictionaries[lang] = [];
+    if (!db.dictionaries[lang].some(w => w.target.toLowerCase() === target.toLowerCase())) {
+        db.dictionaries[lang].push({ target, es });
         save();
-        
-        if(score < 3) { sessionErrors.push(item); }
-        
-        pIdx++; loadPracticeCard();
+        document.getElementById('manual-dict-target').value = '';
+        document.getElementById('manual-dict-es').value = '';
+        renderDictList();
+        showToast(`Agregada: ${target}`);
+    } else { showToast("Ya existe en el diccionario."); }
+}
+
+function deleteDictWord(idx) {
+    const lang = document.getElementById('lang-select').value;
+    const word = db.dictionaries[lang][idx];
+    if (!word) return;
+    if (confirm(`¿Eliminar '${word.target}'?`)) {
+        delete db.wordStats[word.target];
+        db.dictionaries[lang].splice(idx, 1);
+        save(); renderDictList();
+    }
+}
+
+function renderDictList() {
+    const lang = document.getElementById('lang-select').value;
+    const currentDict = db.dictionaries[lang] || [];
+    const q = document.getElementById('dict-search').value.toLowerCase();
+    const filtered = currentDict.map((w, i) => ({ ...w, _idx: i })).filter(w => w.target.toLowerCase().includes(q) || w.es.toLowerCase().includes(q));
+    document.getElementById('dict-container').innerHTML = filtered.map(w => {
+        const stat = db.wordStats[w.target] || 0;
+        const borderColor = stat === 1 ? 'var(--error)' : stat === 2 ? '#d29922' : stat === 3 ? 'var(--c1)' : 'var(--glass-border)';
+        return `<div class="card" style="border-left-color: ${borderColor}">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div><b style="color:var(--c1); font-size:1.1rem;">${escText(w.target)}</b><br><small>${escText(w.es)}</small></div>
+                <div style="display:flex; gap:5px; align-items:center;">
+                    <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
+                    <button class="btn-audio" onclick="playWithBtnSpeed(null, this, ${JSON.stringify(w.target)})"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+                    <button class="btn-audio" style="background:var(--c1); color:#000;" onclick="openFolderSheet('save_dict', {target: ${JSON.stringify(w.target)}, es: ${JSON.stringify(w.es)}})"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                    <button class="btn-mini-action btn-mini-delete" onclick="deleteDictWord(${w._idx})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+let activeShadowFolder = "Todo"; let fQueue = []; let fIdx = 0; let fTimerInterval; let fTime = 0;
+function setShadowFolder(folder) { activeShadowFolder = folder; renderShadow(); renderChips(); }
+
+function startFlowMode() {
+    const lang = document.getElementById('lang-select').value;
+    let pool = db.sentences.filter(s => s.lang === lang);
+    if (activeShadowFolder !== "Todo" && activeShadowFolder !== "_ALL_") pool = pool.filter(s => s.folder === activeShadowFolder);
+    if (pool.length === 0) return alert("Vacío.");
+    fQueue = pool.sort(() => 0.5 - Math.random()); fIdx = 0; fTime = 0;
+    document.getElementById('flow-overlay').style.display = 'flex';
+    document.getElementById('flow-timer-display').innerText = "00:00";
+    fTimerInterval = setInterval(() => {
+        fTime++;
+        const m = Math.floor(fTime / 60).toString().padStart(2, '0');
+        const s = (fTime % 60).toString().padStart(2, '0');
+        document.getElementById('flow-timer-display').innerText = `${m}:${s}`;
+    }, 1000);
+    loadFlowCard();
+}
+
+function loadFlowCard() {
+    if (fIdx >= fQueue.length) { fIdx = 0; fQueue = fQueue.sort(() => 0.5 - Math.random()); }
+    const s = fQueue[fIdx];
+    if (s.type === 'qa') {
+        document.getElementById('flow-target').innerHTML = "<span style='color:var(--c1)'>A:</span> " + makeClickable(s.a_target);
+        document.getElementById('flow-es').innerText = "Q: " + s.q_target;
+        playWithBtnSpeed(null, document.getElementById('flow-speed'), s.a_target);
+    } else {
+        const tText = s.target || s.a_target || s.q_target;
+        const esText = s.es || s.a_es || s.q_es;
+        document.getElementById('flow-target').innerHTML = makeClickable(tText);
+        document.getElementById('flow-es').innerText = esText;
+        playWithBtnSpeed(null, document.getElementById('flow-speed'), tText);
+    }
+}
+function nextFlow() { fIdx++; loadFlowCard(); }
+function exitFlow() { document.getElementById('flow-overlay').style.display = 'none'; clearInterval(fTimerInterval); }
+
+function showTab(t, btnParam) {
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(t).classList.add('active');
+    btnParam.classList.add('active');
+    if (t === 'diccionario') renderDictList(); else render();
+}
+
+function buildCardHtml(s) {
+    const isSel = selectedIds.includes(s.id);
+    const style = isSelectionMode ? (isSel ? 'border-color:var(--c1); background:rgba(255,204,0,0.1);' : 'border-color:var(--glass-border); opacity:0.7;') : '';
+    const clickEvent = isSelectionMode ? `onclick="toggleSelect(${s.id})"` : '';
+    let topPart = '', bottomPart = '', audioText = '';
+
+    if (s.type === 'qa' && s.q_target) {
+        topPart = `<div class="card-es" style="opacity:0.7; font-size:0.8rem; margin-bottom:2px;">Q: ${escText(s.q_es)}</div>
+                   <div class="card-target" style="font-size:1rem; margin-bottom:10px;"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">Q:</span>${makeClickable(s.q_target)}</div>`;
+        bottomPart = `<div class="card-es" style="opacity:0.7; font-size:0.8rem; border-top:1px dashed rgba(255,255,255,0.1); padding-top:5px;">A: ${escText(s.a_es)}</div>
+                      <div class="card-target"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">A:</span>${makeClickable(s.a_target)}</div>`;
+        audioText = s.a_target;
+    } else if (s.type === 'qa') {
+        topPart = `<div class="card-es" style="margin-bottom:8px;"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">Q:</span>${makeClickable(s.q || s.es)}</div>`;
+        bottomPart = `<div class="card-target"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">A:</span>${makeClickable(s.a || s.target)}</div>`;
+        audioText = s.a || s.target;
+    } else {
+        topPart = `<div class="card-es">${escText(s.es)}</div>`;
+        bottomPart = `<div class="card-target">${makeClickable(s.target)}</div>`;
+        audioText = s.target;
     }
 
-    function forceClosePractice() {
-        document.getElementById('practice-overlay').style.display = 'none';
-        if(pType === 'words') renderDictList(); else render();
+    const actionsHtml = isSelectionMode
+        ? `<input type="checkbox" ${isSel ? 'checked' : ''} style="transform:scale(1.5); pointer-events:none;">`
+        : `<div style="display:flex; gap:0;">
+             <button class="btn-mini-action" onclick="openFolderSheet('move_single', {id: ${s.id}})"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button>
+             <button class="btn-mini-action btn-mini-delete" onclick="deleteSentence(${s.id})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+           </div>`;
+
+    return `<div class="card" style="${style}" ${clickEvent}>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <div style="font-size:0.8rem; color:var(--secondary); display:flex; align-items:center; gap:5px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${escText(s.folder)}</div>
+            ${actionsHtml}
+        </div>
+        ${topPart}${bottomPart}
+        <div style="display:flex; align-items:center; gap:5px; margin-top:5px; ${isSelectionMode ? 'pointer-events:none; opacity:0.5;' : ''}">
+            <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
+            <button class="btn-audio" onclick="playWithBtnSpeed(null, this, ${JSON.stringify(audioText)})"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+        </div>
+    </div>`;
+}
+
+function renderRecent() {
+    const currentLang = document.getElementById('lang-select').value;
+    const langSentences = db.sentences.filter(s => s.lang === currentLang);
+    document.getElementById('recent-list').innerHTML = langSentences.slice().reverse().slice(0, 10).map(s => buildCardHtml(s)).join('');
+}
+
+function renderFolders() {
+    const currentLang = document.getElementById('lang-select').value;
+    const langSentences = db.sentences.filter(s => s.lang === currentLang);
+    let accHtml = '';
+    const allCount = langSentences.length;
+    const allIsOpen = openFolders['_ALL_'];
+    accHtml += `<div class="folder-header special ${allIsOpen ? 'open' : ''}" onclick="toggleFolderAccordion('_ALL_')">
+        <div style="display:flex; align-items:center;"><svg class="icon-sm" style="margin-right:8px" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Todas las frases</div>
+        <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8">${allCount} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+    </div>
+    <div class="folder-content ${allIsOpen ? 'open' : ''}">${allIsOpen ? langSentences.slice().reverse().map(s => buildCardHtml(s)).join('') : ''}</div>`;
+    db.folders.forEach(f => {
+        const fSentences = langSentences.filter(s => s.folder === f);
+        const isOpen = openFolders[f];
+        accHtml += `<div class="folder-header ${isOpen ? 'open' : ''}" onclick="toggleFolderAccordion('${escAttr(f)}')">
+            <div style="display:flex; align-items:center;"><svg class="icon-sm" style="margin-right:8px" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>${escText(f)}</div>
+            <div style="display:flex; align-items:center;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8; margin-right:8px;">${fSentences.length} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+        </div>
+        <div class="folder-content ${isOpen ? 'open' : ''}">${isOpen ? fSentences.slice().reverse().map(s => buildCardHtml(s)).join('') : ''}</div>`;
+    });
+    document.getElementById('folders-accordion-container').innerHTML = accHtml;
+
+    document.getElementById('recall-folders').innerHTML = db.folders.map(f => {
+        const count = langSentences.filter(s => s.folder === f).length;
+        return count > 0 ? `<button class="btn-outline" style="justify-content:space-between; width:100%; border-color:var(--glass-border);" onclick="startPracticeByFolder('${escAttr(f)}')"><span>📁 ${escText(f)}</span><span style="color:var(--secondary); font-weight:normal;">${count} frases</span></button>` : '';
+    }).join('');
+}
+
+function renderChips() {
+    document.getElementById('shadow-chips').innerHTML = ["Todo", ...db.folders].map(f =>
+        `<div class="chip ${activeShadowFolder === f ? 'active' : ''}" onclick="setShadowFolder('${escAttr(f)}')">${escText(f)}</div>`
+    ).join('');
+}
+
+function renderShadow() {
+    const currentLang = document.getElementById('lang-select').value;
+    let shadowPool = db.sentences.filter(s => s.lang === currentLang);
+    if (activeShadowFolder !== "Todo" && activeShadowFolder !== "_ALL_") shadowPool = shadowPool.filter(s => s.folder === activeShadowFolder);
+    document.getElementById('shadow-list').innerHTML = shadowPool.slice().reverse().map(s => buildCardHtml(s)).join('');
+}
+
+function render() { renderRecent(); renderFolders(); renderChips(); renderShadow(); }
+
+function createFolder() {
+    const n = document.getElementById('new-folder-name').value;
+    if (n && !db.folders.includes(n)) { db.folders.push(n); save(); render(); document.getElementById('new-folder-name').value = ""; }
+}
+
+// ==========================================
+// MOTOR SRS (RECALL & MISIÓN)
+// ==========================================
+const practiceState = { queue: [], originalQueue: [], idx: 0, type: 'sentences', errors: [], revealed: false };
+
+function startPracticeFromSelection() {
+    if (selectedIds.length === 0) return;
+    const pool = db.sentences.filter(s => selectedIds.includes(s.id));
+    toggleSelectionMode();
+    initPracticeSession(pool, 'sentences');
+}
+
+function startPracticeByFolder(folder) {
+    const lang = document.getElementById('lang-select').value;
+    const pool = db.sentences.filter(s => s.lang === lang && s.folder === folder);
+    if (pool.length === 0) return alert("Carpeta vacía en este idioma.");
+    initPracticeSession(pool, 'sentences');
+}
+
+function startRoulette(type) {
+    const lang = document.getElementById('lang-select').value;
+    let pool = [];
+    let limit = 10;
+    if (type === 'sentences') {
+        pool = db.sentences.filter(s => s.lang === lang);
+    } else {
+        pool = (db.dictionaries[lang] || []).slice();
+        limit = parseInt(document.getElementById('practice-limit').value) || 10;
+        const pending = pool.filter(w => (db.wordStats[w.target] || 0) !== 3);
+        if (pending.length > 0) pool = pending;
     }
+    if (pool.length === 0) return alert("Agrega datos primero para practicar.");
+    pool = pool.sort(() => Math.random() - 0.5).sort((a, b) => {
+        const sA = type === 'sentences' ? (db.sentenceStats[a.id] || 0) : (db.wordStats[a.target] || 0);
+        const sB = type === 'sentences' ? (db.sentenceStats[b.id] || 0) : (db.wordStats[b.target] || 0);
+        if (sA < 3 && sB === 3) return -1;
+        if (sB < 3 && sA === 3) return 1;
+        return 0;
+    });
+    initPracticeSession(pool.slice(0, limit), type);
+}
 
-    function endPracticeSession() {
-        document.getElementById('practice-overlay').style.display = 'none';
-        
-        if(sessionErrors.length > 0) {
-            document.getElementById('report-overlay').style.display = 'flex';
-            document.getElementById('report-list').innerHTML = sessionErrors.map(item => {
-                let es = (pType === 'sentences' && item.type === 'qa') ? item.q_es : item.es;
-                let target = (pType === 'sentences' && item.type === 'qa') ? item.a_target : item.target;
-                return `<div class="error-item"><div style="font-weight:bold; color:var(--c3); font-size:1.1rem; margin-bottom:3px;">${target}</div><div style="font-size:0.85rem; color:var(--secondary);">${es}</div></div>`;
-            }).join('');
-        } else {
-            showToast("¡Bloque Perfecto! 🌟");
-            if(pType === 'words') renderDictList(); else render();
-        }
+function initPracticeSession(queue, type) {
+    practiceState.queue = queue;
+    practiceState.originalQueue = [...queue];
+    practiceState.idx = 0;
+    practiceState.type = type;
+    practiceState.errors = [];
+    document.getElementById('practice-overlay').style.display = 'flex';
+    loadPracticeCard();
+}
+
+function loadPracticeCard() {
+    if (practiceState.idx >= practiceState.queue.length) return endPracticeSession();
+    practiceState.revealed = false;
+    const item = practiceState.queue[practiceState.idx];
+    document.getElementById('practice-progress').innerText = `${practiceState.idx + 1}/${practiceState.queue.length}`;
+    const esText = (practiceState.type === 'sentences' && item.type === 'qa') ? `Q: ${item.q_es}` : item.es;
+    const tText = (practiceState.type === 'sentences' && item.type === 'qa') ? item.a_target : item.target;
+    document.getElementById('practice-front').innerText = esText;
+    document.getElementById('practice-target').innerHTML = makeClickable(tText);
+    document.getElementById('practice-es-small').innerText = esText;
+    document.getElementById('practice-front').style.display = 'block';
+    document.getElementById('practice-back').style.display = 'none';
+    document.getElementById('practice-eval-bar').style.display = 'none';
+    document.getElementById('practice-hint').style.display = 'block';
+}
+
+function revealPractice() {
+    if (practiceState.revealed) return;
+    practiceState.revealed = true;
+    document.getElementById('practice-front').style.display = 'none';
+    document.getElementById('practice-back').style.display = 'flex';
+    document.getElementById('practice-eval-bar').style.display = 'flex';
+    document.getElementById('practice-hint').style.display = 'none';
+    playPracticeAudio();
+}
+
+function playPracticeAudio() {
+    const item = practiceState.queue[practiceState.idx];
+    if (!item) return;
+    const tText = (practiceState.type === 'sentences' && item.type === 'qa') ? item.a_target : item.target;
+    playWithBtnSpeed(null, document.getElementById('practice-speed'), tText);
+}
+
+function evaluatePractice(score) {
+    const item = practiceState.queue[practiceState.idx];
+    if (!item) return;
+    if (practiceState.type === 'sentences') { db.sentenceStats[item.id] = score; }
+    else { db.wordStats[item.target] = score; }
+    save();
+    if (score < 3) { practiceState.errors.push(item); }
+    practiceState.idx++;
+    loadPracticeCard();
+}
+
+function forceClosePractice() {
+    document.getElementById('practice-overlay').style.display = 'none';
+    if (practiceState.type === 'words') renderDictList(); else render();
+}
+
+function endPracticeSession() {
+    document.getElementById('practice-overlay').style.display = 'none';
+    if (practiceState.errors.length > 0) {
+        document.getElementById('report-overlay').style.display = 'flex';
+        document.getElementById('report-list').innerHTML = practiceState.errors.map(item => {
+            const es = (practiceState.type === 'sentences' && item.type === 'qa') ? item.q_es : item.es;
+            const target = (practiceState.type === 'sentences' && item.type === 'qa') ? item.a_target : item.target;
+            return `<div class="error-item"><div style="font-weight:bold; color:var(--c3); font-size:1.1rem; margin-bottom:3px;">${escText(target)}</div><div style="font-size:0.85rem; color:var(--secondary);">${escText(es)}</div></div>`;
+        }).join('');
+    } else {
+        showToast("¡Bloque Perfecto! 🌟");
+        if (practiceState.type === 'words') renderDictList(); else render();
     }
+}
 
-    function retryErrors() {
-        document.getElementById('report-overlay').style.display = 'none';
-        initPracticeSession(pOriginalQueue, pType);
+function retryErrors() {
+    const errorsToRetry = [...practiceState.errors];
+    document.getElementById('report-overlay').style.display = 'none';
+    initPracticeSession(errorsToRetry, practiceState.type);
+}
+
+function closeReport() {
+    document.getElementById('report-overlay').style.display = 'none';
+    if (practiceState.type === 'words') renderDictList(); else render();
+}
+
+let timer; let timeLeft = 25 * 60; let isTimerRunning = false;
+function toggleTimerPanel() {
+    const p = document.getElementById('timer-panel');
+    p.style.display = p.style.display === 'block' ? 'none' : 'block';
+}
+
+function toggleTimer() {
+    const btn = document.getElementById('timer-start-btn');
+    if (isTimerRunning) {
+        clearInterval(timer);
+        btn.innerText = "INICIAR";
+    } else {
+        timer = setInterval(() => {
+            timeLeft--;
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if (timeLeft <= 0) { clearInterval(timer); isTimerRunning = false; btn.innerText = "INICIAR"; timeLeft = 25 * 60; alert("¡Bloque finalizado!"); }
+        }, 1000);
+        btn.innerText = "PARAR";
     }
+    isTimerRunning = !isTimerRunning;
+}
 
-    function closeReport() {
-        document.getElementById('report-overlay').style.display = 'none';
-        if(pType === 'words') renderDictList(); else render();
-    }
+if (!requiresUpdate) {
+    updateLanguageTheme();
+    onLanguageChange();
+    loadVoicesFallback();
+}
 
-    // ==========================================
-    // TIMER PANEL
-    // ==========================================
-    let timer; let timeLeft = 25 * 60; let isTimerRunning = false; 
-    function toggleTimerPanel() { const p = document.getElementById('timer-panel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; } 
-    function toggleTimer() { const btn = document.getElementById('timer-start-btn'); if(isTimerRunning) { clearInterval(timer); btn.innerText = "INICIAR"; } else { timer = setInterval(() => { timeLeft--; document.getElementById('timer-display').innerText = `${Math.floor(timeLeft/60)}:${timeLeft%60<10?'0':''}${timeLeft%60}`; if(timeLeft<=0){clearInterval(timer); isTimerRunning=false; btn.innerText="INICIAR"; alert("¡Bloque finalizado!");} }, 1000); btn.innerText = "PARAR"; } isTimerRunning = !isTimerRunning; }
-
-    updateLanguageTheme(); onLanguageChange(); loadVoicesFallback();
-
-    // REGISTRO DEL SERVICE WORKER (Para modo Offline / PWA)
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
             .then(reg => console.log('Service Worker registrado', reg))
             .catch(err => console.log('Error al registrar SW', err));
-        });
-    }
+    });
+}
 </script>
 </body>
 </html>
