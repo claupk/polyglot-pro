@@ -148,7 +148,7 @@
         <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-bottom: 10px;" onclick="exportBackup()">
             <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Descargar Respaldo Seguro
         </button>
-        <button class="btn-action" style="width:100%;" onclick="acceptUpdate()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg> ACTUALIZAR Y ENTRAR</button>
+        <button id="update-accept-btn" class="btn-action" style="width:100%;" onclick="acceptUpdate()" disabled><svg class="icon-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg> ACTUALIZAR Y ENTRAR</button>
     </div>
 </div>
 
@@ -339,7 +339,7 @@
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Respaldo
             </button>
             <input type="file" id="backup-upload" accept=".json" style="display:none;" onchange="importBackup()">
-            <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="document.getElementById('backup-upload').click()">
+            <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="openBackupRestore()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Restaurar
             </button>
         </div>
@@ -372,9 +372,15 @@
 <div id="recall" class="content">
     <div class="input-box" style="padding: 20px; border-color:var(--c1);">
         <h2 style="margin-top:0; color:var(--c1); margin-bottom:5px;">Modo Recall (SRS)</h2>
-        <p style="color:var(--secondary); font-size:0.9rem; margin-top:0;">Recuperación activa y evaluación.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+            <p style="color:var(--secondary); font-size:0.9rem; margin:0; text-align:left;">Recuperación activa y evaluación.</p>
+            <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                <label style="font-size:0.7rem; color:var(--secondary)">Frases:</label>
+                <input type="number" id="recall-limit" value="10" min="1" max="100" style="width:60px; margin:0; padding:5px; text-align:center" onchange="saveRecallLimit()">
+            </div>
+        </div>
         <button class="btn-outline" style="margin-top:15px; width:100%; border-color:var(--c1); color:var(--c1); background: rgba(255,255,255,0.03);" onclick="startRoulette('sentences')">
-            <svg class="icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Ruleta Rápida (10)
+            <svg class="icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Ruleta Rápida
         </button>
     </div>
     <h3 style="font-size:1rem; margin-bottom:10px; color:var(--text); padding-left:5px;">Repasar por Carpeta:</h3>
@@ -419,19 +425,37 @@ const allLanguages = { "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "a
 
 const APP_VERSION = 46.0;
 const STORAGE_KEY = 'islands_v17';
+const MAX_IMPORT_SIZE_BYTES = 5 * 1024 * 1024;
 let db;
 let requiresUpdate = false;
+let updateBackupReady = false;
 
 function createDefaultDb() {
-    return { appVersion: APP_VERSION, folders: ["General"], sentences: [], wordStats: {}, sentenceStats: {}, uiLang: "es", activeLangs: ["de", "en", "fr", "it", "pt"], savedVoices: {}, dictionaries: {} };
+    return { appVersion: APP_VERSION, folders: ["General"], sentences: [], wordStats: {}, sentenceStats: {}, uiLang: "es", activeLangs: ["de", "en", "fr", "it", "pt"], savedVoices: {}, dictionaries: {}, recallLimit: 10 };
 }
 
 // Motor de persistencia Síncrono (sin bloqueos ni retrasos)
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
 
+function clampNumber(value, fallback, min, max) {
+    const n = Number.parseInt(value, 10);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(max, Math.max(min, n));
+}
+
+function safeDbString(value, maxLength = 5000) {
+    return String(value ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').slice(0, maxLength);
+}
+
+function safePlainObject(value) {
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
 function showUpdateShield() {
     const overlay = document.getElementById('update-overlay');
     if (overlay) overlay.style.display = 'flex';
+    const acceptBtn = document.getElementById('update-accept-btn');
+    if (acceptBtn) acceptBtn.disabled = !updateBackupReady;
 }
 
 function normalizeDb() {
@@ -443,6 +467,37 @@ function normalizeDb() {
     if (!db.activeLangs) db.activeLangs = ["de", "en", "fr", "it", "pt"];
     if (!db.savedVoices) db.savedVoices = {};
     if (!db.dictionaries) db.dictionaries = {};
+    db.folders = Array.isArray(db.folders) ? db.folders.map(f => safeDbString(f, 120)).filter(Boolean).slice(0, 500) : ["General"];
+    if (!db.folders.includes("General")) db.folders.unshift("General");
+    db.activeLangs = Array.isArray(db.activeLangs) ? db.activeLangs.filter(code => allLanguages[code]).slice(0, 50) : ["de", "en", "fr", "it", "pt"];
+    db.sentences = Array.isArray(db.sentences) ? db.sentences.map(item => {
+        const s = safePlainObject(item);
+        return {
+        id: Number.isFinite(Number(s.id)) ? Number(s.id) : generateId(),
+        lang: allLanguages[s.lang] ? s.lang : "de",
+        folder: db.folders.includes(s.folder) ? s.folder : "General",
+        type: s.type === 'qa' ? 'qa' : 'trans',
+        es: safeDbString(s.es),
+        target: safeDbString(s.target),
+        q: safeDbString(s.q),
+        a: safeDbString(s.a),
+        q_es: safeDbString(s.q_es),
+        q_target: safeDbString(s.q_target),
+        a_es: safeDbString(s.a_es),
+        a_target: safeDbString(s.a_target)
+        };
+    }).slice(0, 20000) : [];
+    db.wordStats = safePlainObject(db.wordStats);
+    db.sentenceStats = safePlainObject(db.sentenceStats);
+    db.savedVoices = safePlainObject(db.savedVoices);
+    db.dictionaries = Object.fromEntries(Object.entries(safePlainObject(db.dictionaries)).filter(([lang]) => allLanguages[lang]).map(([lang, words]) => [
+        lang,
+        Array.isArray(words) ? words.map(item => {
+            const w = safePlainObject(item);
+            return { target: safeDbString(w.target, 500), es: safeDbString(w.es, 500) };
+        }).filter(w => w.target && w.es).slice(0, 50000) : []
+    ]));
+    db.recallLimit = clampNumber(db.recallLimit, 10, 1, 100);
 }
 
 function initializeDatabase() {
@@ -471,6 +526,10 @@ function initializeDatabase() {
 }
 
 function acceptUpdate() {
+    if (requiresUpdate && !updateBackupReady) {
+        showToast("Primero descarga un respaldo seguro.");
+        return;
+    }
     normalizeDb();
     db.appVersion = APP_VERSION;
     save();
@@ -480,7 +539,6 @@ function acceptUpdate() {
 }
 
 const appCanStart = initializeDatabase();
-if (!appCanStart) { throw new Error('Polyglot Pro update shield active'); }
 
 // Funciones de UI Loader Asíncrono
 function showLoader(text) {
@@ -495,6 +553,10 @@ function waitForUiFrame() {
 
 function readFileAsText(file) {
     return new Promise((resolve, reject) => {
+        if (file.size > MAX_IMPORT_SIZE_BYTES) {
+            reject(new Error("Archivo demasiado grande."));
+            return;
+        }
         const reader = new FileReader();
         reader.onload = e => resolve(e.target.result);
         reader.onerror = () => reject(reader.error || new Error("No se pudo leer el archivo."));
@@ -525,6 +587,13 @@ document.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         playPracticeAudio();
+        return;
+    }
+    const cardAudioBtn = e.target.closest('.btn-audio[data-audio]');
+    if (cardAudioBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        playWithBtnSpeed(null, cardAudioBtn, cardAudioBtn.dataset.audio);
         return;
     }
     // Para botones del Motor SRS
@@ -574,6 +643,19 @@ function updateDictTitle() {
     const sel = document.getElementById('lang-select');
     document.getElementById('dict-title-text').innerText = "Top 2000 " + sel.options[sel.selectedIndex].text;
     if (document.getElementById('diccionario').classList.contains('active')) { renderDictList(); }
+}
+
+function syncRecallLimitInput() {
+    const input = document.getElementById('recall-limit');
+    if (input) input.value = db.recallLimit;
+}
+
+function saveRecallLimit() {
+    const input = document.getElementById('recall-limit');
+    if (!input) return;
+    db.recallLimit = clampNumber(input.value, 10, 1, 100);
+    input.value = db.recallLimit;
+    save();
 }
 
 function openLangSearch() {
@@ -978,26 +1060,61 @@ const mBtn = document.getElementById('mic-btn');
 mBtn.addEventListener('touchstart', (e) => { e.preventDefault(); if (rec && currentInputMode !== 'manual') { rec.start(); mBtn.classList.add('recording'); } });
 mBtn.addEventListener('touchend', () => { if (rec) rec.stop(); mBtn.classList.remove('recording'); });
 
-function exportBackup() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+function getBackupFileName() {
+    const now = new Date();
+    const stamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    return `polyglot_pro_respaldo_${stamp}.json`;
+}
+
+function markUpdateBackupReady() {
+    if (!requiresUpdate) return;
+    updateBackupReady = true;
+    const acceptBtn = document.getElementById('update-accept-btn');
+    if (acceptBtn) {
+        acceptBtn.disabled = false;
+        acceptBtn.innerHTML = `<svg class="icon-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg> RESPALDO LISTO - ACTUALIZAR`;
+    }
+}
+
+async function exportBackup() {
+    const fileName = getBackupFileName();
+    const data = JSON.stringify(db, null, 2);
+    if (window.showSaveFilePicker) {
+        try {
+            const handle = await window.showSaveFilePicker({
+                id: 'polyglot-pro-backups',
+                suggestedName: fileName,
+                types: [{ description: 'Respaldos Polyglot Pro', accept: { 'application/json': ['.json'] } }]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(data);
+            await writable.close();
+            markUpdateBackupReady();
+            showToast(`Respaldo guardado: ${fileName}`);
+            return;
+        } catch (err) {
+            if (err && err.name === 'AbortError') return;
+        }
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(data);
     const a = document.createElement('a');
     a.setAttribute("href", dataStr);
-    a.setAttribute("download", "polyglot_respaldo.json");
+    a.setAttribute("download", fileName);
     a.click();
-    showToast("Respaldo descargado");
+    markUpdateBackupReady();
+    showToast(`Respaldo descargado: ${fileName}`);
 }
 
 // OPTIMIZACIÓN: Restauración asíncrona con Loader
-async function importBackup() {
-    const input = document.getElementById('backup-upload');
-    const file = input.files[0]; if (!file) return;
+async function restoreBackupFile(file) {
+    if (!file) return;
     showLoader("Restaurando base de datos...");
     try {
         await waitForUiFrame();
         const rawBackup = await readFileAsText(file);
         await waitForUiFrame();
         const importedDb = JSON.parse(rawBackup);
-        if (importedDb && importedDb.folders && importedDb.sentences) {
+        if (safePlainObject(importedDb) === importedDb) {
             db = importedDb;
             db.appVersion = APP_VERSION; // auto-versiona el respaldo
             normalizeDb();
@@ -1008,6 +1125,33 @@ async function importBackup() {
     } catch (err) { showToast("Error al leer archivo."); }
     finally {
         hideLoader();
+    }
+}
+
+async function openBackupRestore() {
+    if (window.showOpenFilePicker) {
+        try {
+            const [handle] = await window.showOpenFilePicker({
+                id: 'polyglot-pro-backups',
+                multiple: false,
+                types: [{ description: 'Respaldos Polyglot Pro', accept: { 'application/json': ['.json'] } }]
+            });
+            const file = await handle.getFile();
+            await restoreBackupFile(file);
+            return;
+        } catch (err) {
+            if (err && err.name === 'AbortError') return;
+        }
+    }
+    document.getElementById('backup-upload').click();
+}
+
+async function importBackup() {
+    const input = document.getElementById('backup-upload');
+    try {
+        const file = input.files[0]; if (!file) return;
+        await restoreBackupFile(file);
+    } finally {
         input.value = '';
     }
 }
@@ -1097,7 +1241,7 @@ function renderDictList() {
                 <div><b style="color:var(--c1); font-size:1.1rem;">${escText(w.target)}</b><br><small>${escText(w.es)}</small></div>
                 <div style="display:flex; gap:5px; align-items:center;">
                     <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
-                    <button class="btn-audio" onclick="playWithBtnSpeed(null, this, ${JSON.stringify(w.target)})"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+                    <button class="btn-audio" data-audio="${escAttr(w.target)}"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
                     <button class="btn-audio" style="background:var(--c1); color:#000;" onclick="openFolderSheet('save_dict', {target: ${JSON.stringify(w.target)}, es: ${JSON.stringify(w.es)}})"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
                     <button class="btn-mini-action btn-mini-delete" onclick="deleteDictWord(${w._idx})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                 </div>
@@ -1189,7 +1333,7 @@ function buildCardHtml(s) {
         ${topPart}${bottomPart}
         <div style="display:flex; align-items:center; gap:5px; margin-top:5px; ${isSelectionMode ? 'pointer-events:none; opacity:0.5;' : ''}">
             <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
-            <button class="btn-audio" onclick="playWithBtnSpeed(null, this, ${JSON.stringify(audioText)})"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+            <button class="btn-audio" data-audio="${escAttr(audioText)}"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
         </div>
     </div>`;
 }
@@ -1273,6 +1417,8 @@ function startRoulette(type) {
     let limit = 10;
     if (type === 'sentences') {
         pool = db.sentences.filter(s => s.lang === lang);
+        saveRecallLimit();
+        limit = db.recallLimit;
     } else {
         pool = (db.dictionaries[lang] || []).slice();
         limit = parseInt(document.getElementById('practice-limit').value) || 10;
@@ -1401,6 +1547,7 @@ function toggleTimer() {
 
 if (!requiresUpdate) {
     updateLanguageTheme();
+    syncRecallLimitInput();
     onLanguageChange();
     loadVoicesFallback();
 }
