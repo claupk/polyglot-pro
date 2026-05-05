@@ -66,6 +66,7 @@
         .card-target { color: var(--c3); font-size: 1.1rem; margin-bottom: 10px; font-weight: 500; }
         .folder-header { background: var(--card); border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; cursor: pointer; font-weight: bold; border-left: 4px solid var(--c1); transition: background 0.2s; }
         .folder-header:active { background: rgba(255,255,255,0.05); }
+        .folder-header.managed { border-color: var(--c1); background: rgba(255,204,0,0.1); box-shadow: 0 0 0 1px rgba(255,204,0,0.2); }
         .folder-header.special { border-left-color: var(--c3); color: var(--c3); }
         .folder-content { display: none; padding: 5px 0 15px 15px; border-left: 2px dashed rgba(255,255,255,0.1); margin-left: 10px; margin-bottom: 15px; }
         .folder-content.open { display: flex; flex-direction: column; }
@@ -73,6 +74,8 @@
         .folder-header.open .chevron { transform: rotate(180deg); color: var(--c1); }
         #selection-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--c1); padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 15px; z-index: 500; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
         #selection-bar.visible { bottom: 85px; }
+        #folder-management-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--c1); padding: 12px 16px; border-radius: 30px; display: flex; align-items: center; gap: 10px; z-index: 501; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
+        #folder-management-bar.visible { bottom: 85px; }
         .sel-btn { border: none; padding: 8px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; }
         .action-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(3px); }
         .action-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: var(--bg); border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px 20px; z-index: 301; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 -10px 30px rgba(0,0,0,0.5); border-top: 2px solid var(--c1); }
@@ -164,6 +167,22 @@
         <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
     </button>
     <button style="background:transparent; border:none; color:#000; font-size:1.5rem; font-weight:bold; margin-left:5px; cursor:pointer; display:flex; align-items:center;" onclick="toggleSelectionMode()">
+        <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+</div>
+
+<div id="folder-management-bar">
+    <span id="folder-manage-name" style="color:#000; font-weight:900; font-size:0.95rem; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Carpeta</span>
+    <button class="sel-btn" style="background: var(--c3); color: #000; padding:8px;" onclick="moveManagedFolder(-1)">
+        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+    <button class="sel-btn" style="background: var(--c3); color: #000; padding:8px;" onclick="moveManagedFolder(1)">
+        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <button class="sel-btn" style="background: var(--error); color: #fff; padding:8px;" onclick="openManagedFolderDelete()">
+        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+    </button>
+    <button style="background:transparent; border:none; color:#000; font-size:1.5rem; font-weight:bold; cursor:pointer; display:flex; align-items:center;" onclick="clearManagedFolder()">
         <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
 </div>
@@ -851,6 +870,59 @@ function deleteSentence(id) {
 let openFolders = {};
 function toggleFolderAccordion(f) { openFolders[f] = !openFolders[f]; renderFolders(); }
 
+let managedFolder = ''; let folderPressTimer = null; let folderLongPressTriggered = false;
+function startFolderLongPress(folder) {
+    if (folder === "General") return;
+    folderLongPressTriggered = false;
+    clearTimeout(folderPressTimer);
+    folderPressTimer = setTimeout(() => {
+        folderLongPressTriggered = true;
+        setManagedFolder(folder);
+    }, 550);
+}
+function cancelFolderLongPress() { clearTimeout(folderPressTimer); }
+function handleFolderHeaderClick(folder) {
+    if (folderLongPressTriggered) {
+        folderLongPressTriggered = false;
+        return;
+    }
+    if (managedFolder) {
+        setManagedFolder(folder);
+        return;
+    }
+    toggleFolderAccordion(folder);
+}
+function setManagedFolder(folder) {
+    if (!folder || folder === "General" || !db.folders.includes(folder)) return;
+    managedFolder = folder;
+    const bar = document.getElementById('folder-management-bar');
+    const name = document.getElementById('folder-manage-name');
+    if (name) name.innerText = folder;
+    if (bar) bar.classList.add('visible');
+    renderFolders();
+}
+function clearManagedFolder() {
+    managedFolder = '';
+    const bar = document.getElementById('folder-management-bar');
+    if (bar) bar.classList.remove('visible');
+    renderFolders();
+}
+function moveManagedFolder(direction) {
+    if (!managedFolder || managedFolder === "General") return;
+    const idx = db.folders.indexOf(managedFolder);
+    if (idx === -1) return;
+    const minIdx = db.folders.indexOf("General") === 0 ? 1 : 0;
+    const nextIdx = idx + direction;
+    if (nextIdx < minIdx || nextIdx >= db.folders.length) return;
+    const [folder] = db.folders.splice(idx, 1);
+    db.folders.splice(nextIdx, 0, folder);
+    save(); render(); setManagedFolder(folder);
+}
+function openManagedFolderDelete() {
+    if (!managedFolder || managedFolder === "General") return;
+    openFolderSheet('delete_folder', { folder: managedFolder });
+}
+
 function openSyncSheet() {
     const toCode = document.getElementById('lang-select').value;
     const selectEl = document.getElementById('lang-select');
@@ -1003,6 +1075,11 @@ function deleteFolderWithMigration(sourceFolder, targetFolder) {
     db.sentences.forEach(s => { if (s.folder === sourceFolder) s.folder = targetFolder; });
     db.folders = db.folders.filter(f => f !== sourceFolder);
     if (activeShadowFolder === sourceFolder) activeShadowFolder = "Todo";
+    if (managedFolder === sourceFolder) {
+        managedFolder = '';
+        const bar = document.getElementById('folder-management-bar');
+        if (bar) bar.classList.remove('visible');
+    }
     delete openFolders[sourceFolder];
     normalizeDb();
     return true;
@@ -1389,10 +1466,11 @@ function renderFolders() {
     db.folders.forEach(f => {
         const fSentences = langSentences.filter(s => s.folder === f);
         const isOpen = openFolders[f];
-        const deleteBtn = f === "General" ? '' : `<button class="btn-mini-action btn-mini-delete" onclick="event.stopPropagation(); openFolderSheet('delete_folder', {folder: decodeURIComponent('${encodeURIComponent(f)}')})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
-        accHtml += `<div class="folder-header ${isOpen ? 'open' : ''}" onclick="toggleFolderAccordion('${escAttr(f)}')">
+        const encodedFolder = encodeURIComponent(f);
+        const managedClass = managedFolder === f ? 'managed' : '';
+        accHtml += `<div class="folder-header ${isOpen ? 'open' : ''} ${managedClass}" onclick="handleFolderHeaderClick(decodeURIComponent('${encodedFolder}'))" onmousedown="startFolderLongPress(decodeURIComponent('${encodedFolder}'))" onmouseup="cancelFolderLongPress()" onmouseleave="cancelFolderLongPress()" ontouchstart="startFolderLongPress(decodeURIComponent('${encodedFolder}'))" ontouchend="cancelFolderLongPress()" ontouchcancel="cancelFolderLongPress()">
             <div style="display:flex; align-items:center;"><svg class="icon-sm" style="margin-right:8px" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>${escText(f)}</div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">${fSentences.length} frases</span>${deleteBtn}<svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+            <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">${fSentences.length} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
         </div>
         <div class="folder-content ${isOpen ? 'open' : ''}">${isOpen ? fSentences.slice().reverse().map(s => buildCardHtml(s)).join('') : ''}</div>`;
     });
