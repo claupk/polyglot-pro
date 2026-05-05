@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Polyglot Pro">
     
     <link rel="manifest" href="./manifest.json">
-    <title>Polyglot Pro 45.1</title>
+    <title>Polyglot Pro 45.2</title>
     <style>
         :root {
             --bg: #0d1117; --card: rgba(22, 27, 34, 0.85); 
@@ -158,9 +158,9 @@
         <div style="color:var(--c1); margin-bottom: 15px;">
             <svg viewBox="0 0 24 24" style="width:60px; height:60px; stroke-width: 1.5;"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </div>
-        <h2 style="margin-top:0; color:var(--c3);">¡Versión 45.1 Lista!</h2>
+        <h2 style="margin-top:0; color:var(--c3);">¡Versión 45.2 Lista!</h2>
         <p style="color:var(--secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px;">
-            Motor SRS corregido, estética minimalista y reportes integrados.<br><br>
+            Motor SRS estabilizado para navegadores móviles estrictos.<br><br>
             Tus datos están a salvo, pero como buena práctica, <b>te recomendamos descargar un respaldo</b> antes de continuar.
         </p>
         <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-bottom: 10px;" onclick="exportBackup()">
@@ -206,8 +206,8 @@
         <div class="small-trans visible" id="flow-es" style="margin-bottom: 20px;">Traducción</div>
         
         <div style="display:flex; gap:20px; align-items:center; justify-content:center; margin-bottom: 20px;">
-            <button class="speed-btn" id="flow-speed" onclick="toggleBtnSpeed(event, this)" style="width: 50px; height: 50px; font-size: 0.85rem; border-color: var(--secondary);">1.0x</button>
-            <button class="btn-audio" style="width: 75px; height: 75px; border-radius:50%;" onclick="playWithBtnSpeed('flow-target', document.getElementById('flow-speed'), null, event)"><svg viewBox="0 0 24 24" style="width: 35px; height: 35px;" class="icon-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+            <button class="speed-btn" id="flow-speed" onclick="toggleBtnSpeed(this)" style="width: 50px; height: 50px; font-size: 0.85rem; border-color: var(--secondary);">1.0x</button>
+            <button class="btn-audio" style="width: 75px; height: 75px; border-radius:50%;" onclick="playWithBtnSpeed('flow-target', document.getElementById('flow-speed'), null)"><svg viewBox="0 0 24 24" style="width: 35px; height: 35px;" class="icon-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
         </div>
         
     </div>
@@ -229,17 +229,17 @@
             <div id="practice-target" class="practice-target">Palabra</div>
             <div id="practice-es-small" class="practice-es-small">Traducción</div>
             <div style="display:flex; gap:20px; align-items:center; justify-content:center;">
-                <button class="speed-btn" id="practice-speed" onclick="toggleBtnSpeed(event, this)" style="width: 50px; height: 50px; font-size: 0.85rem; border-color: var(--secondary);">0.75x</button>
-                <button class="btn-audio" style="width: 65px; height: 65px; border-radius:50%;" onclick="playPracticeAudio(event)"><svg viewBox="0 0 24 24" style="width: 30px; height: 30px;" class="icon-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+                <button class="speed-btn" id="practice-speed" onclick="toggleBtnSpeed(this)" style="width: 50px; height: 50px; font-size: 0.85rem; border-color: var(--secondary);">0.75x</button>
+                <button class="btn-audio" style="width: 65px; height: 65px; border-radius:50%;" onclick="playPracticeAudio()"><svg viewBox="0 0 24 24" style="width: 30px; height: 30px;" class="icon-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
             </div>
         </div>
         
         <div id="practice-hint" class="practice-hint">Toca la pantalla para revelar</div>
     </div>
     <div class="eval-bar" id="practice-eval-bar">
-        <button class="eval-btn eval-btn-hard" onclick="evaluatePractice(event, 1)">Difícil</button>
-        <button class="eval-btn eval-btn-med" onclick="evaluatePractice(event, 2)">Me Cuesta</button>
-        <button class="eval-btn eval-btn-done" onclick="evaluatePractice(event, 3)">Aprendido</button>
+        <button class="eval-btn eval-btn-hard" onclick="evaluatePractice(1)">Difícil</button>
+        <button class="eval-btn eval-btn-med" onclick="evaluatePractice(2)">Me Cuesta</button>
+        <button class="eval-btn eval-btn-done" onclick="evaluatePractice(3)">Aprendido</button>
     </div>
 </div>
 
@@ -352,7 +352,7 @@
         </div>
 
         <div style="display:flex; gap:10px; align-items:center; justify-content:center; margin-top:15px;">
-            <button class="speed-btn" onclick="toggleBtnSpeed(event, this)">1.0x</button>
+            <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
             <button class="btn-audio" onclick="playCurrentAudio(this)"><svg class="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
             <button id="qa-toggle-btn" class="btn-qa-toggle" onclick="toggleMode('qa')" title="Modo Q&A">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
@@ -389,7 +389,7 @@
             <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="exportBackup()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Respaldo
             </button>
-            <input type="file" id="backup-upload" accept=".json" style="display:none;" onchange="importBackup(event)">
+            <input type="file" id="backup-upload" accept=".json" style="display:none;" onchange="importBackup()">
             <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="document.getElementById('backup-upload').click()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Restaurar
             </button>
@@ -459,7 +459,7 @@
         <div style="display:flex; flex-wrap: wrap; gap:8px">
             <button class="btn-outline" style="flex: 1; border-color:var(--c1); color:var(--c1); background: rgba(255,255,255,0.03);" onclick="startRoulette('words')">Practicar</button>
             <button class="btn-outline" style="flex: 1;" onclick="renderDictList()">Ver Todas</button>
-            <input type="file" id="dict-upload" accept=".txt,.csv" style="display:none;" onchange="importDictionary(event)">
+            <input type="file" id="dict-upload" accept=".txt,.csv" style="display:none;" onchange="importDictionary()">
             <button class="btn-outline" style="border-color: var(--glass-border); flex: 100%;" onclick="document.getElementById('dict-upload').click()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Subir .txt al Diccionario
             </button>
@@ -474,7 +474,7 @@
         "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bengalí", "bs": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Birmano", "kn": "Canarés", "ca": "Catalán", "ceb": "Jemer", "cs": "Catalán", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Estonio", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sotho meridional", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "ta": "Tailandés", "tg": "Tayiko", "te": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú"
     };
 
-    const APP_VERSION = 45.1; 
+    const APP_VERSION = 45.2; 
     let db = JSON.parse(localStorage.getItem('islands_v17')) || { 
         appVersion: APP_VERSION, 
         folders: ["General"], 
@@ -595,8 +595,8 @@
         save();
     }
 
-    function playWithBtnSpeed(textId, btn, directText, event) { 
-        if(event) event.stopPropagation(); window.speechSynthesis.cancel(); 
+    function playWithBtnSpeed(textId, btn, directText) { 
+        window.speechSynthesis.cancel(); 
         let text = directText;
         if (!text && textId) {
             const el = document.getElementById(textId);
@@ -660,10 +660,16 @@
         }, 800);
     }
 
-    function makeClickable(text) { if (!text) return ""; return text.split(' ').map(w => { const safeW = w.replace(/'/g, "\\'").replace(/"/g, '&quot;'); return `<span class="word-tap" onclick="translateWord('${safeW}', event)">${w}</span>`; }).join(' '); }
+    function makeClickable(text) { 
+        if (!text) return ""; 
+        return text.split(' ').map(w => { 
+            const safeW = w.replace(/'/g, "\\'").replace(/"/g, '&quot;'); 
+            return `<span class="word-tap" onclick="translateWord('${safeW}')">${w}</span>`; 
+        }).join(' '); 
+    }
     
-    async function translateWord(word, event) {
-        if(event) event.stopPropagation(); const toast = document.getElementById('toast'); toast.innerText = `Buscando...`; toast.style.display = 'block'; setTimeout(() => toast.style.opacity = '1', 10);
+    async function translateWord(word) {
+        const toast = document.getElementById('toast'); toast.innerText = `Buscando...`; toast.style.display = 'block'; setTimeout(() => toast.style.opacity = '1', 10);
         const lCode = document.getElementById('lang-select').value; const cleanWord = word.replace(/[.,!?¿¡]/g, '').toLowerCase();
         try { 
             const localDict = db.dictionaries[lCode] || []; const found = localDict.find(w => w.target.toLowerCase() === cleanWord);
@@ -674,7 +680,7 @@
 
     let isSelectionMode = false; let selectedIds = [];
     function toggleSelectionMode() { isSelectionMode = !isSelectionMode; selectedIds = []; render(); const bar = document.getElementById('selection-bar'); if(isSelectionMode) bar.classList.add('visible'); else bar.classList.remove('visible'); document.getElementById('sel-count').innerText = "0"; }
-    function toggleSelect(id, event) { if(!isSelectionMode) return; if(event) event.stopPropagation(); if(selectedIds.includes(id)) selectedIds = selectedIds.filter(i => i !== id); else selectedIds.push(id); render(); document.getElementById('sel-count').innerText = selectedIds.length; }
+    function toggleSelect(id) { if(!isSelectionMode) return; if(selectedIds.includes(id)) selectedIds = selectedIds.filter(i => i !== id); else selectedIds.push(id); render(); document.getElementById('sel-count').innerText = selectedIds.length; }
     function deleteSelected() { 
         if(selectedIds.length === 0) return; 
         if(confirm(`¿Eliminar ${selectedIds.length} frases seleccionadas?`)) { 
@@ -683,8 +689,7 @@
             save(); toggleSelectionMode(); 
         } 
     }
-    function deleteSentence(id, event) { 
-        if(event) event.stopPropagation(); 
+    function deleteSentence(id) { 
         if(confirm("¿Eliminar frase?")) { 
             db.sentences = db.sentences.filter(s => s.id !== id); 
             delete db.sentenceStats[id];
@@ -843,11 +848,10 @@
             }
         }
         save(); render(); closeAllSheets();
-        showToast(`¡Importado! ${addedCount} guardadas. ${duplicateCount > 0 ? `(${duplicateCount} duplicadas omitidas)` : ''}`);
+        showToast(`¡Importado! ${addedCount} guardadas.`);
     }
 
-    function toggleBtnSpeed(e, btn) { 
-        if(e) e.stopPropagation(); 
+    function toggleBtnSpeed(btn) { 
         const speeds = ["1.0x", "0.75x", "0.5x", "1.25x", "1.5x"]; 
         btn.innerText = speeds[(speeds.indexOf(btn.innerText) + 1) % speeds.length]; 
     }
@@ -865,10 +869,66 @@
     }; }
     const mBtn = document.getElementById('mic-btn'); mBtn.addEventListener('touchstart', (e) => { e.preventDefault(); if(rec && currentInputMode !== 'manual') { rec.start(); mBtn.classList.add('recording'); } }); mBtn.addEventListener('touchend', () => { if(rec) rec.stop(); mBtn.classList.remove('recording'); });
     
-    function exportBackup() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const dlAnchorElem = document.createElement('a'); dlAnchorElem.setAttribute("href", dataStr); dlAnchorElem.setAttribute("download", "polyglot_respaldo.json"); dlAnchorElem.click(); }
-    function importBackup(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const importedDb = JSON.parse(e.target.result); if(importedDb && importedDb.folders && importedDb.sentences) { db = importedDb; save(); alert("¡Restaurado!"); location.reload(); } else { alert("Invalido."); } } catch(err) { alert("Error."); } }; reader.readAsText(file); }
+    // MEJORA UX RESPALDOS
+    function exportBackup() { 
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); 
+        const dlAnchorElem = document.createElement('a'); 
+        dlAnchorElem.setAttribute("href", dataStr); 
+        dlAnchorElem.setAttribute("download", "polyglot_respaldo.json"); 
+        dlAnchorElem.click(); 
+        showToast("Respaldo descargado");
+    }
+    
+    function importBackup() { 
+        const input = document.getElementById('backup-upload');
+        const file = input.files[0]; 
+        if(!file) return; 
+        const reader = new FileReader(); 
+        reader.onload = function(e) { 
+            try { 
+                const importedDb = JSON.parse(e.target.result); 
+                if(importedDb && importedDb.folders && importedDb.sentences) { 
+                    db = importedDb; save(); 
+                    showToast("¡Datos restaurados con éxito!"); 
+                    setTimeout(() => location.reload(), 1500); 
+                } else { showToast("Archivo inválido."); } 
+            } catch(err) { showToast("Error al leer archivo."); } 
+        }; 
+        reader.readAsText(file); 
+        input.value = ''; 
+    }
 
-    function importDictionary(event) { const file = event.target.files[0]; if (!file) return; const lang = document.getElementById('lang-select').value; const reader = new FileReader(); reader.onload = function(e) { const lines = e.target.result.split('\n'); let count = 0; if(!db.dictionaries[lang]) db.dictionaries[lang] = []; lines.forEach(line => { if(line.includes(';')) { const parts = line.split(';'); const target = parts[0].trim(); const es = parts[1].trim(); if(target && es) { if(!db.dictionaries[lang].some(w => w.target.toLowerCase() === target.toLowerCase())) { db.dictionaries[lang].push({target, es}); count++; } } } }); save(); alert(`Añadidas ${count} palabras.`); renderDictList(); event.target.value = ''; }; reader.readAsText(file); }
+    function importDictionary() { 
+        const input = document.getElementById('dict-upload');
+        const file = input.files[0]; 
+        if (!file) return; 
+        const lang = document.getElementById('lang-select').value; 
+        const reader = new FileReader(); 
+        reader.onload = function(e) { 
+            const lines = e.target.result.split('\n'); 
+            let count = 0; 
+            if(!db.dictionaries[lang]) db.dictionaries[lang] = []; 
+            lines.forEach(line => { 
+                if(line.includes(';')) { 
+                    const parts = line.split(';'); 
+                    const target = parts[0].trim(); 
+                    const es = parts[1].trim(); 
+                    if(target && es) { 
+                        if(!db.dictionaries[lang].some(w => w.target.toLowerCase() === target.toLowerCase())) { 
+                            db.dictionaries[lang].push({target, es}); 
+                            count++; 
+                        } 
+                    } 
+                } 
+            }); 
+            save(); 
+            showToast(`Añadidas ${count} palabras.`); 
+            renderDictList(); 
+            input.value = ''; 
+        }; 
+        reader.readAsText(file); 
+    }
+    
     function addDictWordManual() { const lang = document.getElementById('lang-select').value; const target = document.getElementById('manual-dict-target').value.trim(); const es = document.getElementById('manual-dict-es').value.trim(); if(target && es) { if(!db.dictionaries[lang].some(w => w.target.toLowerCase() === target.toLowerCase())) { db.dictionaries[lang].push({target, es}); save(); document.getElementById('manual-dict-target').value = ''; document.getElementById('manual-dict-es').value = ''; renderDictList(); showToast(`Agregada.`); } } }
     function deleteDictWord(target) { if(confirm(`¿Eliminar '${target}'?`)) { const lang = document.getElementById('lang-select').value; db.dictionaries[lang] = db.dictionaries[lang].filter(w => w.target !== target); delete db.wordStats[target]; save(); renderDictList(); } }
 
@@ -880,8 +940,8 @@
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div><b style="color:var(--c1); font-size:1.1rem;">${w.target}</b><br><small>${w.es}</small></div>
                     <div style="display:flex; gap:5px; align-items:center;">
-                        <button class="speed-btn" onclick="toggleBtnSpeed(event, this)">1.0x</button>
-                        <button class="btn-audio" onclick="playWithBtnSpeed(null, this, '${w.target.replace(/'/g,"\\'")}', event)"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+                        <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
+                        <button class="btn-audio" onclick="playWithBtnSpeed(null, this, '${w.target.replace(/'/g,"\\'")}')"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
                         <button class="btn-audio" style="background:var(--c1); color:#000;" onclick="openFolderSheet('save_dict', {target: '${w.target.replace(/'/g,"\\'")}', es: '${w.es.replace(/'/g,"\\'")}'})"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
                         <button class="btn-mini-action btn-mini-delete" onclick="deleteDictWord('${w.target.replace(/'/g,"\\'")}')"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                     </div>
@@ -916,10 +976,10 @@
     function showTab(t, btnParam) { document.querySelectorAll('.content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(t).classList.add('active'); btnParam.classList.add('active'); if(t === 'diccionario') renderDictList(); else render(); }
     
     function generateCardHtml(s) {
-        const isSel = selectedIds.includes(s.id); const style = isSelectionMode ? (isSel ? 'border-color:var(--c1); background:rgba(255,204,0,0.1);' : 'border-color:var(--glass-border); opacity:0.7;') : ''; const clickEvent = isSelectionMode ? `onclick="toggleSelect(${s.id}, event)"` : '';
+        const isSel = selectedIds.includes(s.id); const style = isSelectionMode ? (isSel ? 'border-color:var(--c1); background:rgba(255,204,0,0.1);' : 'border-color:var(--glass-border); opacity:0.7;') : ''; const clickEvent = isSelectionMode ? `onclick="toggleSelect(${s.id})"` : '';
         let topPart = ''; let bottomPart = ''; let audioTarget = '';
         if (s.type === 'qa' && s.q_target) {
-            topPart = `<div class="card-es" style="opacity:0.7; font-size:0.8rem; margin-bottom:2px;">Q: ${s.q_es}</div><div class="card-target" style="font-size:1rem; margin-bottom:10px;"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">Q:</span>${makeClickable(s.q_target)}<button class="btn-mini-action" style="display:inline-flex; padding:2px; vertical-align:middle; margin-left:5px;" onclick="playWithBtnSpeed(null, this.parentElement.parentElement.querySelector('.speed-btn'), '${s.q_target.replace(/'/g,"\\'")}', event)"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button></div>`;
+            topPart = `<div class="card-es" style="opacity:0.7; font-size:0.8rem; margin-bottom:2px;">Q: ${s.q_es}</div><div class="card-target" style="font-size:1rem; margin-bottom:10px;"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">Q:</span>${makeClickable(s.q_target)}<button class="btn-mini-action" style="display:inline-flex; padding:2px; vertical-align:middle; margin-left:5px;" onclick="playWithBtnSpeed(null, this.parentElement.parentElement.querySelector('.speed-btn'), '${s.q_target.replace(/'/g,"\\'")}')"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button></div>`;
             bottomPart = `<div class="card-es" style="opacity:0.7; font-size:0.8rem; margin-bottom:2px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:5px;">A: ${s.a_es}</div><div class="card-target"><span style="color:var(--c1); font-weight:bold; margin-right:5px;">A:</span>${makeClickable(s.a_target)}</div>`;
             audioTarget = s.a_target;
         } else if (s.type === 'qa') {
@@ -929,7 +989,7 @@
         } else {
             topPart = `<div class="card-es">${s.es}</div>`; bottomPart = `<div class="card-target">${makeClickable(s.target)}</div>`; audioTarget = s.target;
         }
-        return `<div class="card" style="${style}" ${clickEvent}><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;"><div style="font-size:0.8rem; color:var(--secondary); display:flex; align-items:center; gap:5px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${s.folder}</div>${isSelectionMode ? `<input type="checkbox" ${isSel ? 'checked' : ''} style="transform:scale(1.5); pointer-events:none;">` : `<div style="display:flex; gap:0px;"><button class="btn-mini-action" onclick="openFolderSheet('move_single', {id: ${s.id}})"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button><button class="btn-mini-action btn-mini-delete" onclick="deleteSentence(${s.id}, event)"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>`}</div>${topPart}${bottomPart}<div style="display:flex; align-items:center; gap:5px; margin-top:5px; ${isSelectionMode ? 'pointer-events:none; opacity:0.5;' : ''}"><button class="speed-btn" onclick="toggleBtnSpeed(event, this)">1.0x</button><button class="btn-audio" onclick="playWithBtnSpeed(null, this, '${audioTarget.replace(/'/g,"\\'")}', event)"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button></div></div>`;
+        return `<div class="card" style="${style}" ${clickEvent}><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;"><div style="font-size:0.8rem; color:var(--secondary); display:flex; align-items:center; gap:5px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${s.folder}</div>${isSelectionMode ? `<input type="checkbox" ${isSel ? 'checked' : ''} style="transform:scale(1.5); pointer-events:none;">` : `<div style="display:flex; gap:0px;"><button class="btn-mini-action" onclick="openFolderSheet('move_single', {id: ${s.id}})"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button><button class="btn-mini-action btn-mini-delete" onclick="deleteSentence(${s.id})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>`}</div>${topPart}${bottomPart}<div style="display:flex; align-items:center; gap:5px; margin-top:5px; ${isSelectionMode ? 'pointer-events:none; opacity:0.5;' : ''}"><button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button><button class="btn-audio" onclick="playWithBtnSpeed(null, this, '${audioTarget.replace(/'/g,"\\'")}')"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button></div></div>`;
     }
 
     function render() {
@@ -1034,16 +1094,16 @@
         playPracticeAudio();
     }
 
-    function playPracticeAudio(e) {
-        if (e) e.stopPropagation();
+    function playPracticeAudio() {
         const item = pQueue[pIdx];
+        if(!item) return;
         let tText = (pType === 'sentences' && item.type === 'qa') ? item.a_target : item.target;
         playWithBtnSpeed(null, document.getElementById('practice-speed'), tText);
     }
 
-    function evaluatePractice(e, score) {
-        if (e) e.stopPropagation();
+    function evaluatePractice(score) {
         const item = pQueue[pIdx];
+        if(!item) return;
         
         if(pType === 'sentences') { db.sentenceStats[item.id] = score; } 
         else { db.wordStats[item.target] = score; }
