@@ -1,0 +1,16 @@
+{
+  "short_name": "PolyglotPro",
+  "name": "Polyglot Pro Mastery",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJz48cmVjdCB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgcng9JzExNScgZmlsbD0nIzBkMTExNycvPjxwYXRoIGQ9J00xNDAgMzQwIEwxNDAgMjIwIEwyNTYgMTIwIEwzNzIgMjIwIEwzNzIgMzQwIEEgMzAgMzAgMCAwIDEgMzQyIDM3MCBMMjAwIDM3MCBMMTIwIDQzMCBMMTQwIDM0MCBaJyBmaWxsPSdub25lJyBzdHJva2U9JyMyZWEwNDMnIHN0cm9rZS13aWR0aD0nMzInIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjxwYXRoIGQ9J00xOTAgMjcwIEwyNTYgMTkwIEwzMjIgMjcwJyBmaWxsPSdub25lJyBzdHJva2U9JyMyZWEwNDMnIHN0cm9rZS13aWR0aD0nMjQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjwvc3ZnPg==",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#0b0e14",
+  "background_color": "#0b0e14"
+}
