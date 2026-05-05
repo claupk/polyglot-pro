@@ -338,7 +338,7 @@
             <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="exportBackup()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Respaldo
             </button>
-            <input type="file" id="backup-upload" accept=".json" style="display:none;" onchange="importBackup()">
+            <input type="file" id="backup-upload" accept=".json,application/json,text/json,text/plain,*/*" style="display:none;" onchange="importBackup()">
             <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="openBackupRestore()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Restaurar
             </button>
@@ -1084,7 +1084,7 @@ async function exportBackup() {
             const handle = await window.showSaveFilePicker({
                 id: 'polyglot-pro-backups',
                 suggestedName: fileName,
-                types: [{ description: 'Respaldos Polyglot Pro', accept: { 'application/json': ['.json'] } }]
+                types: [{ description: 'Respaldos Polyglot Pro', accept: { 'application/json': ['.json'], 'text/plain': ['.json', '.txt'] } }]
             });
             const writable = await handle.createWritable();
             await writable.write(data);
@@ -1096,11 +1096,13 @@ async function exportBackup() {
             if (err && err.name === 'AbortError') return;
         }
     }
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(data);
+    const blob = new Blob([data], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.setAttribute("href", dataStr);
+    a.setAttribute("href", url);
     a.setAttribute("download", fileName);
     a.click();
+    URL.revokeObjectURL(url);
     markUpdateBackupReady();
     showToast(`Respaldo descargado: ${fileName}`);
 }
@@ -1134,7 +1136,7 @@ async function openBackupRestore() {
             const [handle] = await window.showOpenFilePicker({
                 id: 'polyglot-pro-backups',
                 multiple: false,
-                types: [{ description: 'Respaldos Polyglot Pro', accept: { 'application/json': ['.json'] } }]
+                types: [{ description: 'Respaldos Polyglot Pro', accept: { 'application/json': ['.json'], 'text/plain': ['.json', '.txt'] } }]
             });
             const file = await handle.getFile();
             await restoreBackupFile(file);
