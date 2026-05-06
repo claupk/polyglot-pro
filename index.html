@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Polyglot Pro">
     <link rel="manifest" href="./manifest.json">
-    <title>Polyglot Pro 48.0</title>
+    <title>Polyglot Pro 49.0</title>
     <style>
         :root {
             --bg: #0d1117; --card: rgba(22, 27, 34, 0.85);
@@ -77,13 +77,13 @@
         .folder-content.open { display: flex; flex-direction: column; }
         .chevron { transition: transform 0.3s; color: var(--secondary); }
         .folder-header.open .chevron { transform: rotate(180deg); color: var(--c1); }
-        #selection-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--c1); padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 15px; z-index: 500; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
+        #selection-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--c1); padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 15px; z-index: 700; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
         #selection-bar.visible { bottom: 85px; }
-        #folder-management-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--c1); padding: 12px 16px; border-radius: 30px; display: flex; align-items: center; gap: 10px; z-index: 501; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
+        #folder-management-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--c1); padding: 12px 16px; border-radius: 30px; display: flex; align-items: center; gap: 10px; z-index: 700; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
         #folder-management-bar.visible { bottom: 85px; }
         .sel-btn { border: none; padding: 8px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; }
-        .action-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(3px); }
-        .action-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: var(--bg); border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px 20px; z-index: 301; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 -10px 30px rgba(0,0,0,0.5); border-top: 2px solid var(--c1); }
+        .action-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 800; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(3px); }
+        .action-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: var(--bg); border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px 20px; z-index: 801; transition: bottom 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: 0 -10px 30px rgba(0,0,0,0.5); border-top: 2px solid var(--c1); }
         .action-sheet.open { bottom: 0; }
         .action-overlay.open { display: block; opacity: 1; }
         #library-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 600; display:none; opacity:0; transition:opacity 0.25s; backdrop-filter: blur(3px); }
@@ -99,7 +99,7 @@
         .mini-tab { flex:1; border:1px solid var(--glass-border); background:transparent; color:var(--secondary); padding:10px; border-radius:12px; font-weight:bold; cursor:pointer; }
         .mini-tab.active { color:#000; background:var(--c1); border-color:var(--c1); }
         .sheet-btn { background: var(--card); border: 1px solid var(--glass-border); color: var(--text); padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; cursor: pointer; }
-        .search-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: var(--bg); border: 2px solid var(--c1); border-radius: 20px; padding: 20px; z-index: 302; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .search-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: var(--bg); border: 2px solid var(--c1); border-radius: 20px; padding: 20px; z-index: 802; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .search-modal.open { display: block; }
         #lang-search-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
         .lang-item { padding: 12px; border-bottom: 1px solid var(--glass-border); cursor: pointer; display: flex; justify-content: space-between; }
@@ -108,14 +108,14 @@
         .chips-container::-webkit-scrollbar { display: none; }
         .chip { padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 20px; font-size: 0.85rem; white-space: nowrap; cursor: pointer; color: var(--secondary); font-weight: bold; }
         .chip.active { background: var(--c1); color: #000; border-color: var(--c1); }
-        .training-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 400; display: none; flex-direction: column; }
+        .training-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 900; display: none; flex-direction: column; }
         .training-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
         .close-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .training-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
         .big-word { font-size: 2.2rem; font-weight: bold; color: var(--c1); margin-bottom: 10px; line-height: 1.2; }
         .small-trans { font-size: 1.2rem; color: var(--secondary); margin-bottom: 30px; opacity: 0; }
         .small-trans.visible { opacity: 1; }
-        #practice-overlay, #report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: none; flex-direction: column; }
+        #practice-overlay, #report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 900; display: none; flex-direction: column; }
         .practice-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
         .practice-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; cursor: pointer; }
         .practice-front { font-size: 1.8rem; font-weight: bold; color: var(--c3); margin-bottom: 20px; word-break: break-word; line-height: 1.3; }
@@ -160,7 +160,7 @@
         <div style="color:var(--c1); margin-bottom: 15px;">
             <svg viewBox="0 0 24 24" style="width:60px; height:60px; stroke-width: 1.5;"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </div>
-        <h2 style="margin-top:0; color:var(--c3);">¡Versión 48.0 Lista!</h2>
+        <h2 style="margin-top:0; color:var(--c3);">¡Versión 49.0 Lista!</h2>
         <p style="color:var(--secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px;">
             Nueva navegación, Biblioteca separada y limpieza segura de caché.<br><br>
             Por protocolo de seguridad, <b>te exigimos descargar un respaldo</b> antes de continuar.
@@ -407,7 +407,10 @@
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; padding: 0 5px;">
                 <b style="color:var(--text)">Mis Carpetas</b>
-                <button onclick="toggleSelectionMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card);">Seleccionar</button>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="toggleSelectionMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card);">Frases</button>
+                    <button onclick="startFolderDeleteMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card); color:var(--error);">Carpetas</button>
+                </div>
             </div>
             <div id="folders-accordion-container" style="display:flex; flex-direction:column;"></div>
         </div>
@@ -490,10 +493,6 @@
                 <b style="color:var(--c1); font-size: 1.1rem;" id="dict-title-text">Top 2000</b>
                 <div style="font-size: 0.75rem; color: var(--secondary);">Palabras base del idioma</div>
             </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                <label style="font-size:0.7rem; color:var(--secondary)">Bloque:</label>
-                <input type="number" id="practice-limit" value="10" style="width:55px; margin:0; padding:5px; text-align:center">
-            </div>
         </div>
         <div style="display:flex; gap:8px; margin-bottom:15px;">
             <input type="text" id="manual-dict-target" placeholder="Nueva palabra..." style="margin-bottom:0; flex:1;">
@@ -501,8 +500,12 @@
             <button class="btn-action" style="width:auto; padding: 0 15px;" onclick="addDictWordManual()"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
         </div>
         <div style="display:flex; flex-wrap: wrap; gap:8px">
-            <button class="btn-outline" style="flex: 1; border-color:var(--c1); color:var(--c1); background: rgba(255,255,255,0.03);" onclick="startRoulette('words')"><svg class="icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Practicar</button>
-            <button class="btn-outline" style="flex: 1;" onclick="renderDictList()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg> Ver Todas</button>
+            <button class="btn-outline" style="flex: 1; border-color:var(--c1); color:var(--c1); background: rgba(255,255,255,0.03);" onclick="startWordPractice('block')"><svg class="icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Bloque aleatorio</button>
+            <button class="btn-outline" style="flex: 1;" onclick="startWordPractice('infinite')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18.178 8.822C16.677 7.32 14.338 7 12 10c-2.338-3-4.677-2.68-6.178-1.178a4 4 0 0 0 0 5.656C7.323 15.98 9.662 16.3 12 13.3c2.338 3 4.677 2.68 6.178 1.178a4 4 0 0 0 0-5.656z"></path></svg> Infinito</button>
+            <div style="display:flex; align-items:center; gap:8px; flex:100%; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:12px; padding:10px;">
+                <label style="font-size:0.75rem; color:var(--secondary); flex:1; text-align:left;">Palabras por bloque</label>
+                <input type="number" id="practice-limit" value="10" min="1" max="200" style="width:70px; margin:0; padding:8px; text-align:center" onchange="saveWordBlockLimit()">
+            </div>
             <button class="btn-outline" style="border-color: var(--glass-border); flex: 100%;" onclick="openLibraryDrawer()">
                 <svg class="icon-sm" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Gestionar en Biblioteca
             </button>
@@ -518,7 +521,7 @@
 // ==========================================
 const allLanguages = { "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Jemer", "kn": "Canarés", "ca": "Catalán", "ceb": "Cebuano", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Finlandés", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sindhi", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "tg": "Tayiko", "ta": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú" };
 
-const APP_VERSION = 48.0;
+const APP_VERSION = 49.0;
 const STORAGE_KEY = 'islands_v17';
 const MAX_IMPORT_SIZE_BYTES = 5 * 1024 * 1024;
 let db;
@@ -526,7 +529,7 @@ let requiresUpdate = false;
 let updateBackupReady = false;
 
 function createDefaultDb() {
-    return { appVersion: APP_VERSION, folders: ["General"], sentences: [], wordStats: {}, sentenceStats: {}, uiLang: "es", activeLangs: ["de", "en", "fr", "it", "pt"], savedVoices: {}, dictionaries: {}, recallLimit: 10 };
+    return { appVersion: APP_VERSION, folders: ["General"], sentences: [], wordStats: {}, sentenceStats: {}, uiLang: "es", activeLangs: ["de", "en", "fr", "it", "pt"], savedVoices: {}, dictionaries: {}, recallLimit: 10, wordBlockLimit: 10 };
 }
 
 // Motor de persistencia Síncrono (sin bloqueos ni retrasos)
@@ -593,6 +596,7 @@ function normalizeDb() {
         }).filter(w => w.target && w.es).slice(0, 50000) : []
     ]));
     db.recallLimit = clampNumber(db.recallLimit, 10, 1, 100);
+    db.wordBlockLimit = clampNumber(db.wordBlockLimit, 10, 1, 200);
 }
 
 function initializeDatabase() {
@@ -754,6 +758,7 @@ function updateDictTitle() {
 function syncRecallLimitInput() {
     const input = document.getElementById('recall-limit');
     if (input) input.value = db.recallLimit;
+    syncWordBlockLimitInput();
 }
 
 function saveRecallLimit() {
@@ -761,6 +766,19 @@ function saveRecallLimit() {
     if (!input) return;
     db.recallLimit = clampNumber(input.value, 10, 1, 100);
     input.value = db.recallLimit;
+    save();
+}
+
+function syncWordBlockLimitInput() {
+    const input = document.getElementById('practice-limit');
+    if (input) input.value = db.wordBlockLimit;
+}
+
+function saveWordBlockLimit() {
+    const input = document.getElementById('practice-limit');
+    if (!input) return;
+    db.wordBlockLimit = clampNumber(input.value, 10, 1, 200);
+    input.value = db.wordBlockLimit;
     save();
 }
 
@@ -985,7 +1003,8 @@ function showToast(msg) {
 
 let isSelectionMode = false; let selectedIds = [];
 function toggleSelectionMode() {
-    isSelectionMode = !isSelectionMode; selectedIds = []; render();
+    isSelectionMode = !isSelectionMode; selectedIds = [];
+    render();
     const bar = document.getElementById('selection-bar');
     if (isSelectionMode) bar.classList.add('visible'); else bar.classList.remove('visible');
     document.getElementById('sel-count').innerText = "0";
@@ -1065,6 +1084,10 @@ function moveManagedFolder(direction) {
 function openManagedFolderDelete() {
     if (!managedFolder || managedFolder === "General") return;
     openFolderSheet('delete_folder', { folder: managedFolder });
+}
+
+function startFolderDeleteMode() {
+    showToast("Mantén presionada una carpeta para moverla o eliminarla.");
 }
 
 function openSyncSheet() {
@@ -1741,7 +1764,7 @@ function createFolder() {
 // ==========================================
 // MOTOR SRS (RECALL & MISIÓN)
 // ==========================================
-const practiceState = { queue: [], originalQueue: [], idx: 0, type: 'sentences', errors: [], revealed: false };
+const practiceState = { queue: [], originalQueue: [], idx: 0, type: 'sentences', errors: [], revealed: false, infinite: false };
 
 function startPracticeFromSelection() {
     if (selectedIds.length === 0) return;
@@ -1798,21 +1821,55 @@ function startRoulette(type) {
     initPracticeSession(pool.slice(0, limit), type);
 }
 
-function initPracticeSession(queue, type) {
+function getPrioritizedWordPool() {
+    const lang = document.getElementById('lang-select').value;
+    let pool = (db.dictionaries[lang] || []).slice();
+    return pool.sort(() => Math.random() - 0.5).sort((a, b) => {
+        const sA = db.wordStats[a.target] || 0;
+        const sB = db.wordStats[b.target] || 0;
+        if (sA === 0 && sB !== 0) return -1;
+        if (sB === 0 && sA !== 0) return 1;
+        if (sA < 3 && sB === 3) return -1;
+        if (sB < 3 && sA === 3) return 1;
+        return sA - sB;
+    });
+}
+
+function startWordPractice(mode) {
+    const pool = getPrioritizedWordPool();
+    if (pool.length === 0) return alert("Agrega palabras primero para practicar.");
+    if (mode === 'infinite') {
+        initPracticeSession(pool, 'words', true);
+        return;
+    }
+    saveWordBlockLimit();
+    initPracticeSession(pool.slice(0, db.wordBlockLimit), 'words', false);
+}
+
+function initPracticeSession(queue, type, infinite = false) {
     practiceState.queue = queue;
     practiceState.originalQueue = [...queue];
     practiceState.idx = 0;
     practiceState.type = type;
     practiceState.errors = [];
+    practiceState.infinite = infinite;
     document.getElementById('practice-overlay').style.display = 'flex';
     loadPracticeCard();
 }
 
 function loadPracticeCard() {
-    if (practiceState.idx >= practiceState.queue.length) return endPracticeSession();
+    if (practiceState.idx >= practiceState.queue.length) {
+        if (practiceState.infinite && practiceState.type === 'words') {
+            practiceState.queue = getPrioritizedWordPool();
+            practiceState.originalQueue = [...practiceState.queue];
+            practiceState.idx = 0;
+        } else {
+            return endPracticeSession();
+        }
+    }
     practiceState.revealed = false;
     const item = practiceState.queue[practiceState.idx];
-    document.getElementById('practice-progress').innerText = `${practiceState.idx + 1}/${practiceState.queue.length}`;
+    document.getElementById('practice-progress').innerText = practiceState.infinite ? `∞ ${practiceState.idx + 1}` : `${practiceState.idx + 1}/${practiceState.queue.length}`;
     const esText = (practiceState.type === 'sentences' && item.type === 'qa') ? `Q: ${item.q_es}` : item.es;
     const tText = (practiceState.type === 'sentences' && item.type === 'qa') ? item.a_target : item.target;
     document.getElementById('practice-front').innerText = esText;
