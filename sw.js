@@ -1,4 +1,4 @@
-const CACHE_NAME = 'polyglot-v22';
+const CACHE_NAME = 'polyglot-v24';
 const assets = ['./', './index.html', './manifest.json'];
 self.addEventListener('install', e => {
     self.skipWaiting();

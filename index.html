@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Polyglot Pro">
     <link rel="manifest" href="./manifest.json">
-    <title>Polyglot Pro 49.0</title>
+    <title>Polyglot Pro 51.0</title>
     <style>
         :root {
             --bg: #0d1117; --card: rgba(22, 27, 34, 0.85);
@@ -160,7 +160,7 @@
         <div style="color:var(--c1); margin-bottom: 15px;">
             <svg viewBox="0 0 24 24" style="width:60px; height:60px; stroke-width: 1.5;"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </div>
-        <h2 style="margin-top:0; color:var(--c3);">¡Versión 49.0 Lista!</h2>
+        <h2 style="margin-top:0; color:var(--c3);">¡Versión 51.0 Lista!</h2>
         <p style="color:var(--secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px;">
             Nueva navegación, Biblioteca separada y limpieza segura de caché.<br><br>
             Por protocolo de seguridad, <b>te exigimos descargar un respaldo</b> antes de continuar.
@@ -374,18 +374,19 @@
         </button>
     </div>
     <div id="drawer-menu" class="drawer-view active">
-        <button class="side-menu-option" onclick="showDrawerView('timer')"><span>Temporizador</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+        <div class="input-box">
+            <div class="library-section-title">Pomodoro</div>
+            <div id="timer-display" style="font-size: 2.4rem; margin-bottom: 12px; font-family: monospace; font-weight: bold; color: var(--c3); text-align:center;">25:00</div>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:12px;">
+                <button class="btn-outline" onclick="setPomodoroTime(15)" style="padding:10px; font-size:0.85rem;">15 min</button>
+                <button class="btn-outline" onclick="setPomodoroTime(25)" style="padding:10px; font-size:0.85rem;">25 min</button>
+                <button class="btn-outline" onclick="setPomodoroTime(50)" style="padding:10px; font-size:0.85rem;">50 min</button>
+            </div>
+            <button class="btn-action" id="timer-start-btn" onclick="toggleTimer()">INICIAR</button>
+        </div>
         <button class="side-menu-option" onclick="showDrawerView('library')"><span>Biblioteca</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
         <button class="side-menu-option" onclick="showDrawerView('settings')"><span>Ajustes</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
         <button class="side-menu-option" onclick="showDrawerView('info')"><span>Info</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-    </div>
-    <div id="drawer-timer" class="drawer-view">
-        <button class="btn-outline" style="width:auto; margin-bottom:15px;" onclick="showDrawerView('menu')">Volver</button>
-        <div class="input-box">
-            <div class="library-section-title">Temporizador</div>
-            <div id="timer-display" style="font-size: 2.4rem; margin-bottom: 15px; font-family: monospace; font-weight: bold; color: var(--c3);">25:00</div>
-            <button class="btn-action" id="timer-start-btn" onclick="toggleTimer()">INICIAR</button>
-        </div>
     </div>
     <div id="drawer-library" class="drawer-view">
         <button class="btn-outline" style="width:auto; margin-bottom:15px;" onclick="showDrawerView('menu')">Volver</button>
@@ -450,16 +451,9 @@
 <div id="shadowing" class="content">
     <div class="input-box" style="padding:20px; border-color:var(--c1);">
         <h2 style="margin-top:0; color:var(--c1); margin-bottom:5px;">Shadow</h2>
-        <p style="color:var(--secondary); font-size:0.9rem; margin-top:0; text-align:left;">Practica pronunciación sin calificación. La lista se repetirá hasta que salgas o termine el tiempo.</p>
+        <p style="color:var(--secondary); font-size:0.9rem; margin-top:0; text-align:left;">Practica pronunciación sin calificación. La lista se repetirá hasta que salgas.</p>
         <label style="font-size:0.75rem; color:var(--secondary); display:block; text-align:left; margin-bottom:5px;">Carpeta</label>
         <select id="shadow-folder-select" style="margin-bottom:10px;"></select>
-        <label style="font-size:0.75rem; color:var(--secondary); display:block; text-align:left; margin-bottom:5px;">Duración</label>
-        <select id="shadow-duration-select" style="margin-bottom:15px;">
-            <option value="5">5 minutos</option>
-            <option value="10">10 minutos</option>
-            <option value="15">15 minutos</option>
-            <option value="0">Infinito</option>
-        </select>
         <button class="btn-action" style="background: var(--c2); color: white;" onclick="startConfiguredShadow()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M13 2L3 14h8l-1 8 11-12h-8l1-8z"></path></svg> Iniciar Shadow</button>
     </div>
     <h3 style="font-size:1rem; margin-bottom:10px; color:var(--text); padding-left:5px;">Vista previa</h3>
@@ -476,8 +470,10 @@
         <button class="btn-action" onclick="startConfiguredRecall()">
             <svg class="icon-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg> Iniciar Recall
         </button>
-        <label style="font-size:0.75rem; color:var(--secondary); display:block; text-align:left; margin:12px 0 5px;">Frases para Ruleta Rápida</label>
-        <input type="number" id="recall-limit" value="10" min="1" max="100" style="margin-bottom:10px; text-align:center" onchange="saveRecallLimit()">
+        <div style="display:flex; align-items:center; gap:10px; margin:12px 0 10px;">
+            <label style="font-size:0.75rem; color:var(--secondary); flex:1; text-align:left;">Frases para Ruleta Rápida</label>
+            <input type="number" id="recall-limit" value="10" min="1" max="100" style="width:70px; margin:0; padding:8px; text-align:center" onchange="saveRecallLimit()">
+        </div>
         <button class="btn-outline" style="margin-top:10px; width:100%; border-color:var(--glass-border); color:var(--secondary); background: rgba(255,255,255,0.03);" onclick="startRoulette('sentences')">
             <svg class="icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Ruleta Rápida
         </button>
@@ -490,7 +486,7 @@
     <div class="input-box" style="padding:15px">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
             <div style="text-align: left;">
-                <b style="color:var(--c1); font-size: 1.1rem;" id="dict-title-text">Top 2000</b>
+                <b style="color:var(--c1); font-size: 1.1rem;" id="dict-title-text">Palabras más usadas</b>
                 <div style="font-size: 0.75rem; color: var(--secondary);">Palabras base del idioma</div>
             </div>
         </div>
@@ -521,7 +517,7 @@
 // ==========================================
 const allLanguages = { "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Jemer", "kn": "Canarés", "ca": "Catalán", "ceb": "Cebuano", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Finlandés", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sindhi", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "tg": "Tayiko", "ta": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú" };
 
-const APP_VERSION = 49.0;
+const APP_VERSION = 51.0;
 const STORAGE_KEY = 'islands_v17';
 const MAX_IMPORT_SIZE_BYTES = 5 * 1024 * 1024;
 let db;
@@ -751,7 +747,7 @@ function updateLanguageTheme() {
 
 function updateDictTitle() {
     const sel = document.getElementById('lang-select');
-    document.getElementById('dict-title-text').innerText = "Top 2000 " + sel.options[sel.selectedIndex].text;
+    document.getElementById('dict-title-text').innerText = "Palabras más usadas";
     if (document.getElementById('diccionario').classList.contains('active')) { renderDictList(); }
 }
 
@@ -848,7 +844,6 @@ function showDrawerView(view) {
     if (target) target.classList.add('active');
     const titles = {
         menu: ["Menú", "Herramientas y gestión"],
-        timer: ["Temporizador", "Bloques de enfoque"],
         library: ["Biblioteca", "Frases y diccionario"],
         settings: ["Ajustes", "Preferencias visuales"],
         info: ["Info", "Guías de uso e instalación"]
@@ -950,7 +945,7 @@ function toggleMode(mode) {
 }
 
 function onLanguageChange() {
-    if (isTimerRunning) { clearInterval(timer); isTimerRunning = false; timeLeft = 25 * 60; document.getElementById('timer-display').innerText = '25:00'; document.getElementById('timer-start-btn').innerText = 'INICIAR'; }
+    if (isTimerRunning) { clearInterval(timer); isTimerRunning = false; timeLeft = pomodoroDuration; const m = Math.floor(timeLeft / 60); document.getElementById('timer-display').innerText = `${m}:00`; document.getElementById('timer-start-btn').innerText = 'INICIAR'; }
     isSelectionMode = false; selectedIds = [];
     document.getElementById('sel-count').innerText = "0";
     document.getElementById('selection-bar').classList.remove('visible');
@@ -1074,6 +1069,36 @@ function moveManagedFolder(direction) {
     if (!managedFolder || managedFolder === "General") return;
     const idx = db.folders.indexOf(managedFolder);
     if (idx === -1) return;
+    const visibleFolders = db.folders.filter(f => f !== "General");
+    const visibleIdx = visibleFolders.indexOf(managedFolder);
+    const targetVisibleFolder = visibleFolders[visibleIdx + direction];
+    if (!targetVisibleFolder) return;
+    const nextIdx = db.folders.indexOf(targetVisibleFolder);
+    if (nextIdx === -1) return;
+    const [folder] = db.folders.splice(idx, 1);
+    db.folders.splice(nextIdx, 0, folder);
+    save(); render(); setManagedFolder(folder);
+}
+
+function deleteEmptyManagedFolder() {
+    if (!managedFolder || managedFolder === "General") return false;
+    const affectedCount = db.sentences.filter(s => s.folder === managedFolder).length;
+    if (affectedCount > 0) return false;
+    const folderName = managedFolder;
+    db.folders = db.folders.filter(f => f !== folderName);
+    clearManagedFolder();
+    delete openFolders[folderName];
+    normalizeDb();
+    save();
+    render();
+    showToast("Carpeta vacía eliminada.");
+    return true;
+}
+
+function moveManagedFolderLegacy(direction) {
+    if (!managedFolder || managedFolder === "General") return;
+    const idx = db.folders.indexOf(managedFolder);
+    if (idx === -1) return;
     const minIdx = db.folders.indexOf("General") === 0 ? 1 : 0;
     const nextIdx = idx + direction;
     if (nextIdx < minIdx || nextIdx >= db.folders.length) return;
@@ -1083,6 +1108,7 @@ function moveManagedFolder(direction) {
 }
 function openManagedFolderDelete() {
     if (!managedFolder || managedFolder === "General") return;
+    if (deleteEmptyManagedFolder()) return;
     openFolderSheet('delete_folder', { folder: managedFolder });
 }
 
@@ -1096,7 +1122,7 @@ function openSyncSheet() {
     const langName = selectEl.options[selectEl.selectedIndex].text.split(' ')[0];
     const getEs = (s) => s.es || s.q_es || s.q || "";
     let sheetHtml = ''; let hasSyncable = false;
-    db.folders.forEach(f => {
+    db.folders.filter(f => f !== "General").forEach(f => {
         const basePhrases = db.sentences.filter(s => s.folder === f);
         const currentLangSentences = basePhrases.filter(s => s.lang === toCode);
         const uniqueEs = [...new Set(basePhrases.map(getEs).filter(t => t !== ""))];
@@ -1172,12 +1198,12 @@ function openFolderSheet(mode, data) {
         }
     } else if (mode === 'move_multi' && selectedIds.length === 0) return;
 
-    let folderOptions = db.folders;
+    let folderOptions = db.folders.filter(f => f !== "General");
     if (mode === 'delete_folder') {
         pendingFolderDelete = safeDbString(sheetData.folder, 120);
         if (!pendingFolderDelete || pendingFolderDelete === "General" || !db.folders.includes(pendingFolderDelete)) return;
         const affectedCount = db.sentences.filter(s => s.folder === pendingFolderDelete).length;
-        folderOptions = db.folders.filter(f => f !== pendingFolderDelete);
+        folderOptions = db.folders.filter(f => f !== pendingFolderDelete && f !== "General");
         document.getElementById('sheet-title').innerText = `Borrar "${pendingFolderDelete}" (${affectedCount} frases)`;
     }
 
@@ -1187,6 +1213,7 @@ function openFolderSheet(mode, data) {
             <span style="color:var(--secondary)"><svg class="icon-sm" viewBox="0 0 24 24">${mode === 'delete_folder' ? '<polyline points="9 18 15 12 9 6"></polyline>' : '<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>'}</svg></span>
         </button>`
     ).join('');
+    if (mode === 'delete_folder' && !sheetHtml) sheetHtml = `<div style="text-align:center; padding:20px; color:var(--secondary);">Crea otra carpeta para mover estas frases antes de borrar.</div>`;
     sheetHtml += `<button class="sheet-btn" style="border: 2px dashed var(--c1); justify-content: center; color: var(--c1); background: transparent;" onclick="promptNewFolderAndSave()"><svg class="icon-sm" viewBox="0 0 24 24" style="margin-right:8px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Crear Nueva Isla</button>`;
     if (mode !== 'delete_folder') document.getElementById('sheet-title').innerText = (mode === 'move_multi' || mode === 'move_single') ? "Mover a..." : "Guardar en...";
     document.getElementById('sheet-folder-list').innerHTML = sheetHtml;
@@ -1518,7 +1545,6 @@ function renderDictList() {
                 <div style="display:flex; gap:5px; align-items:center;">
                     <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
                     <button class="btn-audio" data-audio="${escAttr(w.target)}"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
-                    <button class="btn-mini-action btn-mini-delete" onclick="deleteDictWord(${w._idx})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                 </div>
             </div>
         </div>`;
@@ -1548,7 +1574,7 @@ function renderLibraryDictionary() {
     }).join('') : `<div style="color:var(--secondary); font-size:0.85rem; padding:15px;">No hay palabras para este idioma.</div>`;
 }
 
-let activeShadowFolder = "Todo"; let fQueue = []; let fIdx = 0; let fTimerInterval; let fTime = 0; let fDurationLimit = 0; let fCycle = 1;
+let activeShadowFolder = "Todo"; let fQueue = []; let fIdx = 0; let fTimerInterval; let fTime = 0; let fCycle = 1;
 function setShadowFolder(folder) { activeShadowFolder = folder; renderShadow(); renderChips(); }
 
 function getFolderPracticePool(folder, lang) {
@@ -1568,8 +1594,6 @@ function getFolderMastery(folder) {
 function startConfiguredShadow() {
     const folderSelect = document.getElementById('shadow-folder-select');
     activeShadowFolder = folderSelect ? folderSelect.value : "Todo";
-    const durationSelect = document.getElementById('shadow-duration-select');
-    fDurationLimit = durationSelect ? Number(durationSelect.value) * 60 : 0;
     startFlowMode();
 }
 
@@ -1583,11 +1607,6 @@ function startFlowMode() {
     clearInterval(fTimerInterval);
     fTimerInterval = setInterval(() => {
         fTime++;
-        if (fDurationLimit > 0 && fTime >= fDurationLimit) {
-            exitFlow();
-            showToast("Shadow completado.");
-            return;
-        }
         const m = Math.floor(fTime / 60).toString().padStart(2, '0');
         const s = (fTime % 60).toString().padStart(2, '0');
         document.getElementById('flow-timer-display').innerText = `${m}:${s} · Vuelta ${fCycle}`;
@@ -1683,7 +1702,7 @@ function renderFolders() {
         <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8">${allCount} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
     </div>
     <div class="folder-content ${allIsOpen ? 'open' : ''}">${allIsOpen ? langSentences.slice().reverse().map(s => buildCardHtml(s)).join('') : ''}</div>`;
-    db.folders.forEach(f => {
+    db.folders.filter(f => f !== "General").forEach(f => {
         const fSentences = langSentences.filter(s => s.folder === f);
         const isOpen = openFolders[f];
         const encodedFolder = encodeURIComponent(f);
@@ -1696,7 +1715,7 @@ function renderFolders() {
     });
     document.getElementById('folders-accordion-container').innerHTML = accHtml;
 
-    document.getElementById('recall-folders').innerHTML = db.folders.map(f => {
+    document.getElementById('recall-folders').innerHTML = db.folders.filter(f => f !== "General").map(f => {
         const count = langSentences.filter(s => s.folder === f).length;
         const mastery = getFolderMastery(f);
         return count > 0 ? `<button class="btn-outline" style="justify-content:space-between; width:100%; border-color:var(--glass-border);" onclick="selectRecallFolder('${escAttr(f)}')"><span style="display:flex; align-items:center; gap:8px;"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>${escText(f)}</span><span style="color:var(--secondary); font-weight:normal;">${mastery}% · ${count}</span></button>` : '';
@@ -1709,7 +1728,7 @@ function renderChips() {
 
 function renderPracticeSelectors() {
     const currentLang = document.getElementById('lang-select').value;
-    const options = ["Todo", ...db.folders].map(f => {
+    const options = ["Todo", ...db.folders.filter(f => f !== "General")].map(f => {
         const count = getFolderPracticePool(f, currentLang).length;
         return `<option value="${escAttr(f)}">${escText(f)} · ${count}</option>`;
     }).join('');
@@ -1717,14 +1736,14 @@ function renderPracticeSelectors() {
     if (shadowSelect) {
         const previous = shadowSelect.value || activeShadowFolder;
         shadowSelect.innerHTML = options;
-        shadowSelect.value = db.folders.includes(previous) || previous === "Todo" ? previous : "Todo";
+        shadowSelect.value = (db.folders.includes(previous) && previous !== "General") || previous === "Todo" ? previous : "Todo";
         shadowSelect.onchange = () => { activeShadowFolder = shadowSelect.value; renderShadow(); };
     }
     const recallSelect = document.getElementById('recall-folder-select');
     if (recallSelect) {
         const previous = recallSelect.value || "Todo";
         recallSelect.innerHTML = options;
-        recallSelect.value = db.folders.includes(previous) || previous === "Todo" ? previous : "Todo";
+        recallSelect.value = (db.folders.includes(previous) && previous !== "General") || previous === "Todo" ? previous : "Todo";
         recallSelect.onchange = updateRecallMasteryLabel;
         updateRecallMasteryLabel();
     }
@@ -1940,7 +1959,15 @@ function closeReport() {
     if (practiceState.type === 'words') renderDictList(); else render();
 }
 
-let timer; let timeLeft = 25 * 60; let isTimerRunning = false;
+let timer; let pomodoroDuration = 25 * 60; let timeLeft = pomodoroDuration; let isTimerRunning = false;
+
+function setPomodoroTime(minutes) {
+    if (isTimerRunning) return;
+    pomodoroDuration = minutes * 60;
+    timeLeft = pomodoroDuration;
+    const display = document.getElementById('timer-display');
+    if (display) display.innerText = `${minutes}:00`;
+}
 
 function toggleTimer() {
     const btn = document.getElementById('timer-start-btn');
@@ -1953,7 +1980,7 @@ function toggleTimer() {
             const m = Math.floor(timeLeft / 60);
             const s = timeLeft % 60;
             document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-            if (timeLeft <= 0) { clearInterval(timer); isTimerRunning = false; btn.innerText = "INICIAR"; timeLeft = 25 * 60; alert("¡Bloque finalizado!"); }
+            if (timeLeft <= 0) { clearInterval(timer); isTimerRunning = false; btn.innerText = "INICIAR"; timeLeft = pomodoroDuration; alert("¡Bloque finalizado!"); }
         }, 1000);
         btn.innerText = "PARAR";
     }
