@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Polyglot Pro">
     <link rel="manifest" href="./manifest.json">
-    <title>Polyglot Pro 54.0</title>
+    <title>Polyglot Pro 56.0</title>
     <style>
         :root {
             --bg: #0d1117; --card: rgba(22, 27, 34, 0.85);
@@ -98,11 +98,9 @@
         .mini-tabs { display:flex; gap:8px; margin:10px 0 15px; }
         .mini-tab { flex:1; border:1px solid var(--glass-border); background:transparent; color:var(--secondary); padding:10px; border-radius:12px; font-weight:bold; cursor:pointer; }
         .mini-tab.active { color:#000; background:var(--c1); border-color:var(--c1); }
-        .pomodoro-picker { display:grid; grid-template-columns: 1fr; gap:8px; margin-bottom:12px; }
-        .pomodoro-unit { background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:16px; padding:10px 6px; text-align:center; }
-        .pomodoro-unit input { width:100%; margin:0; padding:6px 2px; border:none; background:transparent; color:var(--c1); font-size:1.7rem; font-weight:bold; text-align:center; font-family:monospace; }
-        .pomodoro-unit input:focus { outline:none; color:var(--c3); }
-        .pomodoro-unit label { display:block; color:var(--secondary); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.04em; }
+        .pomodoro-picker { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; color:var(--secondary); font-size:0.85rem; }
+        .pomodoro-picker input { width:74px; margin:0; padding:8px; background:transparent; color:var(--c1); border:1px solid var(--glass-border); border-radius:12px; font-size:1rem; font-weight:bold; text-align:center; font-family:monospace; }
+        .pomodoro-picker input:focus { outline:none; border-color:var(--c1); color:var(--c3); }
         .sheet-btn { background: var(--card); border: 1px solid var(--glass-border); color: var(--text); padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; cursor: pointer; }
         .search-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: var(--bg); border: 2px solid var(--c1); border-radius: 20px; padding: 20px; z-index: 802; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .search-modal.open { display: block; }
@@ -165,7 +163,7 @@
         <div style="color:var(--c1); margin-bottom: 15px;">
             <svg viewBox="0 0 24 24" style="width:60px; height:60px; stroke-width: 1.5;"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </div>
-        <h2 style="margin-top:0; color:var(--c3);">¡Versión 54.0 Lista!</h2>
+        <h2 style="margin-top:0; color:var(--c3);">¡Versión 56.0 Lista!</h2>
         <p style="color:var(--secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px;">
             Nueva navegación, Biblioteca separada y limpieza segura de caché.<br><br>
             Por protocolo de seguridad, <b>te exigimos descargar un respaldo</b> antes de continuar.
@@ -185,9 +183,6 @@
     <button class="sel-btn" style="background: #000; color: #fff;" onclick="openFolderSheet('move_multi')">
         <svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><polyline points="9 14 12 17 15 14"></polyline><line x1="12" y1="9" x2="12" y2="17"></line></svg> Mover
     </button>
-    <button class="sel-btn" style="background: var(--error); color: #fff; padding: 8px; flex:none;" onclick="deleteSelected()">
-        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-    </button>
     <button style="background:transparent; border:none; color:#000; font-size:1.5rem; font-weight:bold; margin-left:5px; cursor:pointer; display:flex; align-items:center;" onclick="toggleSelectionMode()">
         <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
@@ -200,9 +195,6 @@
     </button>
     <button class="sel-btn" style="background: var(--c3); color: #000; padding:8px;" onclick="moveManagedFolder(1)">
         <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </button>
-    <button class="sel-btn" style="background: var(--error); color: #fff; padding:8px;" onclick="openManagedFolderDelete()">
-        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
     </button>
     <button style="background:transparent; border:none; color:#000; font-size:1.5rem; font-weight:bold; cursor:pointer; display:flex; align-items:center;" onclick="clearManagedFolder()">
         <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -381,12 +373,10 @@
     <div id="drawer-menu" class="drawer-view active">
         <div class="input-box">
             <div class="library-section-title">Pomodoro</div>
-            <div id="timer-display" style="font-size: 2.2rem; margin-bottom: 12px; font-family: monospace; font-weight: bold; color: var(--c3); text-align:center;">25:00</div>
+            <div id="timer-display" style="font-size: 3rem; margin-bottom: 8px; font-family: monospace; font-weight: bold; color: var(--c3); text-align:center;">25:00</div>
             <div class="pomodoro-picker">
-                <div class="pomodoro-unit">
-                    <input id="pomodoro-minutes" type="number" min="1" max="999" value="25" inputmode="numeric" onchange="updatePomodoroFromInputs()">
-                    <label>Minutos</label>
-                </div>
+                <span>Minutos</span>
+                <input id="pomodoro-minutes" type="number" min="1" max="999" value="25" inputmode="numeric" onchange="updatePomodoroFromInputs()">
             </div>
             <div style="display:flex; gap:8px;">
                 <button class="btn-action" id="timer-start-btn" onclick="toggleTimer()" style="flex:1;">INICIAR</button>
@@ -419,7 +409,7 @@
                 <b style="color:var(--text)">Mis Carpetas</b>
                 <div style="display:flex; gap:8px;">
                     <button onclick="toggleSelectionMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card);">Frases</button>
-                    <button onclick="startFolderDeleteMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card); color:var(--error);">Carpetas</button>
+                    <button onclick="startFolderDeleteMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card); color:var(--secondary);">Ordenar</button>
                 </div>
             </div>
             <div id="folders-accordion-container" style="display:flex; flex-direction:column;"></div>
@@ -526,7 +516,7 @@
 // ==========================================
 const allLanguages = { "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Jemer", "kn": "Canarés", "ca": "Catalán", "ceb": "Cebuano", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Finlandés", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sindhi", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "tg": "Tayiko", "ta": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú" };
 
-const APP_VERSION = 54.0;
+const APP_VERSION = 56.0;
 const STORAGE_KEY = 'islands_v17';
 const MAX_IMPORT_SIZE_BYTES = 5 * 1024 * 1024;
 let db;
@@ -1122,7 +1112,7 @@ function openManagedFolderDelete() {
 }
 
 function startFolderDeleteMode() {
-    showToast("Mantén presionada una carpeta para moverla o eliminarla.");
+    showToast("Mantén presionada una carpeta para ordenarla.");
 }
 
 function openSyncSheet() {
@@ -1652,7 +1642,7 @@ function showTab(t, btnParam) {
     if (t === 'diccionario') renderDictList(); else render();
 }
 
-function buildCardHtml(s) {
+function buildCardHtml(s, allowDelete = false, allowMove = true) {
     const isSel = selectedIds.includes(s.id);
     const style = isSelectionMode ? (isSel ? 'border-color:var(--c1); background:rgba(255,204,0,0.1);' : 'border-color:var(--glass-border); opacity:0.7;') : '';
     const clickEvent = isSelectionMode ? `onclick="toggleSelect(${s.id})"` : '';
@@ -1676,9 +1666,11 @@ function buildCardHtml(s) {
 
     const actionsHtml = isSelectionMode
         ? `<input type="checkbox" ${isSel ? 'checked' : ''} style="transform:scale(1.5); pointer-events:none;">`
+        : !allowMove && !allowDelete
+        ? ''
         : `<div style="display:flex; gap:0;">
-             <button class="btn-mini-action" onclick="openFolderSheet('move_single', {id: ${s.id}})"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button>
-             <button class="btn-mini-action btn-mini-delete" onclick="deleteSentence(${s.id})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+             ${allowMove ? `<button class="btn-mini-action" onclick="openFolderSheet('move_single', {id: ${s.id}})"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button>` : ''}
+             ${allowDelete ? `<button class="btn-mini-action btn-mini-delete" onclick="deleteSentence(${s.id})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>` : ''}
            </div>`;
 
     return `<div class="card" style="${style}" ${clickEvent}>
@@ -1710,7 +1702,7 @@ function renderFolders() {
         <div style="display:flex; align-items:center;"><svg class="icon-sm" style="margin-right:8px" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Todas las frases</div>
         <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8">${allCount} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
     </div>
-    <div class="folder-content ${allIsOpen ? 'open' : ''}">${allIsOpen ? langSentences.slice().reverse().map(s => buildCardHtml(s)).join('') : ''}</div>`;
+    <div class="folder-content ${allIsOpen ? 'open' : ''}">${allIsOpen ? langSentences.slice().reverse().map(s => buildCardHtml(s, true)).join('') : ''}</div>`;
     db.folders.filter(f => f !== "General").forEach(f => {
         const fSentences = langSentences.filter(s => s.folder === f);
         const isOpen = openFolders[f];
@@ -1720,7 +1712,7 @@ function renderFolders() {
             <div style="display:flex; align-items:center;"><svg class="icon-sm" style="margin-right:8px" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>${escText(f)}</div>
             <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">${fSentences.length} frases</span><svg class="icon-sm chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
         </div>
-        <div class="folder-content ${isOpen ? 'open' : ''}">${isOpen ? fSentences.slice().reverse().map(s => buildCardHtml(s)).join('') : ''}</div>`;
+        <div class="folder-content ${isOpen ? 'open' : ''}">${isOpen ? fSentences.slice().reverse().map(s => buildCardHtml(s, true)).join('') : ''}</div>`;
     });
     document.getElementById('folders-accordion-container').innerHTML = accHtml;
 
@@ -1779,7 +1771,7 @@ function renderShadow() {
     const currentLang = document.getElementById('lang-select').value;
     let shadowPool = db.sentences.filter(s => s.lang === currentLang);
     if (activeShadowFolder !== "Todo" && activeShadowFolder !== "_ALL_") shadowPool = shadowPool.filter(s => s.folder === activeShadowFolder);
-    document.getElementById('shadow-list').innerHTML = shadowPool.slice().reverse().map(s => buildCardHtml(s)).join('');
+    document.getElementById('shadow-list').innerHTML = shadowPool.slice().reverse().map(s => buildCardHtml(s, false, false)).join('');
 }
 
 function render() { renderRecent(); renderFolders(); renderChips(); renderShadow(); }
