@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Polyglot Pro">
     <link rel="manifest" href="./manifest.json">
-    <title>Polyglot Pro 56.0</title>
+    <title>Polyglot Pro 57.0</title>
     <style>
         :root {
             --bg: #0d1117; --card: rgba(22, 27, 34, 0.85);
@@ -163,7 +163,7 @@
         <div style="color:var(--c1); margin-bottom: 15px;">
             <svg viewBox="0 0 24 24" style="width:60px; height:60px; stroke-width: 1.5;"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </div>
-        <h2 style="margin-top:0; color:var(--c3);">¡Versión 56.0 Lista!</h2>
+        <h2 style="margin-top:0; color:var(--c3);">¡Versión 57.0 Lista!</h2>
         <p style="color:var(--secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px;">
             Nueva navegación, Biblioteca separada y limpieza segura de caché.<br><br>
             Por protocolo de seguridad, <b>te exigimos descargar un respaldo</b> antes de continuar.
@@ -195,6 +195,9 @@
     </button>
     <button class="sel-btn" style="background: var(--c3); color: #000; padding:8px;" onclick="moveManagedFolder(1)">
         <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <button class="sel-btn" style="background: var(--error); color: #fff; padding:8px;" onclick="openManagedFolderDelete()">
+        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
     </button>
     <button style="background:transparent; border:none; color:#000; font-size:1.5rem; font-weight:bold; cursor:pointer; display:flex; align-items:center;" onclick="clearManagedFolder()">
         <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -516,7 +519,7 @@
 // ==========================================
 const allLanguages = { "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Jemer", "kn": "Canarés", "ca": "Catalán", "ceb": "Cebuano", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Finlandés", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sindhi", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "tg": "Tayiko", "ta": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú" };
 
-const APP_VERSION = 56.0;
+const APP_VERSION = 57.0;
 const STORAGE_KEY = 'islands_v17';
 const MAX_IMPORT_SIZE_BYTES = 5 * 1024 * 1024;
 let db;
@@ -1112,7 +1115,7 @@ function openManagedFolderDelete() {
 }
 
 function startFolderDeleteMode() {
-    showToast("Mantén presionada una carpeta para ordenarla.");
+    showToast("Mantén presionada una carpeta para ordenarla o borrarla.");
 }
 
 function openSyncSheet() {
