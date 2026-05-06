@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Polyglot Pro">
     <link rel="manifest" href="./manifest.json">
-    <title>Polyglot Pro 47.0</title>
+    <title>Polyglot Pro 48.0</title>
     <style>
         :root {
             --bg: #0d1117; --card: rgba(22, 27, 34, 0.85);
@@ -38,9 +38,6 @@
         #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--c1); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 10000; display: none; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; text-align: center; border: 2px solid rgba(255,255,255,0.2); }
         .word-tap { cursor: pointer; display: inline-block; transition: 0.1s; margin: 0 3px; line-height: 1.4; }
         .word-tap:active { color: var(--c1); transform: scale(1.1); }
-        .timer-btn-corner { position: fixed; top: 12px; right: 15px; z-index: 100; background: rgba(22, 27, 34, 0.9); border: 1px solid var(--c3); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,0,0,0.4); backdrop-filter: blur(5px); color: var(--c3); cursor: pointer; transition: 0.2s; }
-        .timer-btn-corner:active { transform: scale(0.9); }
-        .timer-panel { position: fixed; top: 65px; right: 15px; z-index: 99; background: var(--card); backdrop-filter: blur(15px); padding: 20px; border-radius: 16px; border: 2px solid var(--c2); display: none; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .tabs { display: flex; background: var(--card); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); padding: 8px 65px 8px 10px; overflow-x: auto; scrollbar-width: none; }
         .tabs::-webkit-scrollbar { display: none; }
         .tab-btn { flex: none; min-width: 65px; background: transparent; border: none; color: var(--secondary); padding: 5px; font-weight: 600; font-size: 0.65rem; text-transform: uppercase; border-radius: 8px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
@@ -94,6 +91,13 @@
         #folders.library-drawer { position: fixed; top: 0; right: -100%; width: min(430px, 92vw); height: 100vh; z-index: 601; display:block; background: var(--bg); border-left: 2px solid var(--c1); padding: 16px; padding-bottom: 120px; overflow-y: auto; transition: right 0.3s cubic-bezier(0.1, 0.8, 0.2, 1); box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
         #folders.library-drawer.open { right: 0; }
         .library-section-title { display:flex; align-items:center; gap:8px; color:var(--c1); margin:18px 0 10px; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.04em; }
+        .side-menu-option { width:100%; background:var(--card); border:1px solid var(--glass-border); color:var(--text); border-radius:16px; padding:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; font-weight:bold; cursor:pointer; text-align:left; }
+        .side-menu-option:active, .side-menu-option.active { border-color:var(--c1); color:var(--c1); background:rgba(255,204,0,0.08); }
+        .drawer-view { display:none; }
+        .drawer-view.active { display:block; }
+        .mini-tabs { display:flex; gap:8px; margin:10px 0 15px; }
+        .mini-tab { flex:1; border:1px solid var(--glass-border); background:transparent; color:var(--secondary); padding:10px; border-radius:12px; font-weight:bold; cursor:pointer; }
+        .mini-tab.active { color:#000; background:var(--c1); border-color:var(--c1); }
         .sheet-btn { background: var(--card); border: 1px solid var(--glass-border); color: var(--text); padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; cursor: pointer; }
         .search-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: var(--bg); border: 2px solid var(--c1); border-radius: 20px; padding: 20px; z-index: 302; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .search-modal.open { display: block; }
@@ -156,9 +160,9 @@
         <div style="color:var(--c1); margin-bottom: 15px;">
             <svg viewBox="0 0 24 24" style="width:60px; height:60px; stroke-width: 1.5;"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </div>
-        <h2 style="margin-top:0; color:var(--c3);">¡Versión 46.0 Lista!</h2>
+        <h2 style="margin-top:0; color:var(--c3);">¡Versión 48.0 Lista!</h2>
         <p style="color:var(--secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px;">
-            Motor Táctil Pro y Sincronización Segura.<br><br>
+            Nueva navegación, Biblioteca separada y limpieza segura de caché.<br><br>
             Por protocolo de seguridad, <b>te exigimos descargar un respaldo</b> antes de continuar.
         </p>
         <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-bottom: 10px;" onclick="exportBackup()">
@@ -198,12 +202,6 @@
     <button style="background:transparent; border:none; color:#000; font-size:1.5rem; font-weight:bold; cursor:pointer; display:flex; align-items:center;" onclick="clearManagedFolder()">
         <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
-</div>
-
-<div class="timer-btn-corner" onclick="toggleTimerPanel()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-<div class="timer-panel" id="timer-panel">
-    <div id="timer-display" style="font-size: 2.2rem; margin-bottom: 15px; font-family: monospace; font-weight: bold; color: var(--c3);">25:00</div>
-    <button class="btn-action" id="timer-start-btn" onclick="toggleTimer()">INICIAR</button>
 </div>
 
 <div id="flow-overlay" class="training-overlay">
@@ -289,10 +287,10 @@
     <button class="tab-btn" onclick="showTab('recall', this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg><span>Recall</span></button>
     <button class="tab-btn" onclick="showTab('diccionario', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"></path></svg><span>Diccionario</span></button>
 </div>
-<button class="menu-tab-btn" onclick="openLibraryDrawer()" title="Biblioteca">
+<button class="menu-tab-btn" onclick="openSideMenu()" title="Menú">
     <svg class="icon-sm" viewBox="0 0 24 24" style="width:24px; height:24px;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
 </button>
-<div id="library-overlay" onclick="closeLibraryDrawer()"></div>
+<div id="library-overlay" onclick="closeSideMenu()"></div>
 
 <div id="islands" class="content active">
     <div class="input-box">
@@ -368,63 +366,82 @@
 <div id="folders" class="library-drawer">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px;">
         <div>
-            <h2 style="margin:0; color:var(--c1);">Biblioteca</h2>
-            <div style="font-size:0.8rem; color:var(--secondary);">Gestión, archivos y configuración</div>
+            <h2 id="drawer-title" style="margin:0; color:var(--c1);">Menú</h2>
+            <div id="drawer-subtitle" style="font-size:0.8rem; color:var(--secondary);">Herramientas y gestión</div>
         </div>
-        <button class="btn-outline" style="width:auto; flex:none; padding:10px;" onclick="closeLibraryDrawer()">
+        <button class="btn-outline" style="width:auto; flex:none; padding:10px;" onclick="closeSideMenu()">
             <svg class="icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
     </div>
-    <div class="input-box">
-        <div class="library-section-title"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Carpetas de frases</div>
-        <input type="text" id="new-folder-name" placeholder="Nueva Carpeta...">
-        <button class="btn-action" onclick="createFolder()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg> Crear</button>
-        <div style="display:flex; gap:8px; margin-top:15px; padding-top:15px; border-top: 1px solid var(--glass-border);">
-            <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="exportBackup()">
-                <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Respaldo
-            </button>
-            <input type="file" id="backup-upload" accept=".json,application/json,text/json,text/plain,*/*" style="display:none;" onchange="importBackup()">
-            <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="openBackupRestore()">
-                <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Restaurar
-            </button>
-        </div>
-        <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-top:10px;" onclick="openSyncSheet()">
-            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg> Importar carpetas a este idioma
-        </button>
-        <div style="font-size:0.75rem; color:var(--secondary); text-align:left; margin-top:8px; line-height:1.4;">
-            Traduce solo las frases que falten en el idioma activo para evitar duplicar toda la base innecesariamente.
+    <div id="drawer-menu" class="drawer-view active">
+        <button class="side-menu-option" onclick="showDrawerView('timer')"><span>Temporizador</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+        <button class="side-menu-option" onclick="showDrawerView('library')"><span>Biblioteca</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+        <button class="side-menu-option" onclick="showDrawerView('settings')"><span>Ajustes</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+        <button class="side-menu-option" onclick="showDrawerView('info')"><span>Info</span><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </div>
+    <div id="drawer-timer" class="drawer-view">
+        <button class="btn-outline" style="width:auto; margin-bottom:15px;" onclick="showDrawerView('menu')">Volver</button>
+        <div class="input-box">
+            <div class="library-section-title">Temporizador</div>
+            <div id="timer-display" style="font-size: 2.4rem; margin-bottom: 15px; font-family: monospace; font-weight: bold; color: var(--c3);">25:00</div>
+            <button class="btn-action" id="timer-start-btn" onclick="toggleTimer()">INICIAR</button>
         </div>
     </div>
-    <div class="input-box">
-        <div class="library-section-title"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Diccionario</div>
-        <input type="text" id="library-dict-search" placeholder="Buscar palabra..." oninput="renderLibraryDictionary()" style="margin-bottom:10px;">
-        <input type="file" id="dict-upload" accept=".txt,.csv" style="display:none;" onchange="importDictionary()">
-        <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-bottom:10px;" onclick="document.getElementById('dict-upload').click()">
-            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M12 3v12"></path><path d="M8 11l4 4 4-4"></path><path d="M5 21h14"></path></svg> Importar palabras
-        </button>
-        <div id="library-dict-container" style="max-height:260px; overflow-y:auto;"></div>
-    </div>
-    <div class="input-box">
-        <div class="library-section-title"><svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg> Ayuda y flujo IA</div>
-        <p style="font-size:0.85rem; color:var(--secondary); line-height:1.5; text-align:left; margin-top:0;">
-            Usa <b>Islas</b> para traducir o crear frases. Pide a una IA personalizada listas con formato <b>#Carpeta: Tema</b> y luego pégalas en el Importador Masivo de Islas. La Biblioteca sirve para respaldar, restaurar, ordenar carpetas y gestionar palabras.
-        </p>
-        <button class="btn-outline" style="width:100%;" onclick="toggleThemeMode()">
-            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></svg> Modo claro / oscuro
-        </button>
-    </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; padding: 0 5px;">
-        <b style="color:var(--text)">Mis Carpetas</b>
-        <div style="display:flex; gap:8px;">
-            <button onclick="openSyncSheet()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card);">
-                <svg class="icon-sm" viewBox="0 0 24 24"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
-            </button>
-            <button onclick="toggleSelectionMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card);">
-                <svg class="icon-sm" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-            </button>
+    <div id="drawer-library" class="drawer-view">
+        <button class="btn-outline" style="width:auto; margin-bottom:15px;" onclick="showDrawerView('menu')">Volver</button>
+        <div class="mini-tabs">
+            <button id="library-tab-phrases" class="mini-tab active" onclick="showLibraryTab('phrases')">Frases</button>
+            <button id="library-tab-dict" class="mini-tab" onclick="showLibraryTab('dict')">Diccionario</button>
+        </div>
+        <div id="library-phrases-panel">
+            <div class="input-box">
+                <div class="library-section-title">Carpetas de frases</div>
+                <input type="text" id="new-folder-name" placeholder="Nueva Carpeta...">
+                <button class="btn-action" onclick="createFolder()">Crear</button>
+                <div style="display:flex; gap:8px; margin-top:15px; padding-top:15px; border-top: 1px solid var(--glass-border);">
+                    <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="exportBackup()">Respaldo</button>
+                    <input type="file" id="backup-upload" accept=".json,application/json,text/json,text/plain,*/*" style="display:none;" onchange="importBackup()">
+                    <button class="btn-outline" style="font-size: 0.8rem; flex:1;" onclick="openBackupRestore()">Restaurar</button>
+                </div>
+                <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-top:10px;" onclick="openSyncSheet()">Importar carpetas a este idioma</button>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; padding: 0 5px;">
+                <b style="color:var(--text)">Mis Carpetas</b>
+                <button onclick="toggleSelectionMode()" class="btn-outline" style="padding:4px 12px; width:auto; flex:none; font-size:0.8rem; background: var(--card);">Seleccionar</button>
+            </div>
+            <div id="folders-accordion-container" style="display:flex; flex-direction:column;"></div>
+        </div>
+        <div id="library-dict-panel" style="display:none;">
+            <div class="input-box">
+                <div class="library-section-title">Diccionario</div>
+                <input type="text" id="library-dict-search" placeholder="Buscar palabra..." oninput="renderLibraryDictionary()" style="margin-bottom:10px;">
+                <input type="file" id="dict-upload" accept=".txt,.csv" style="display:none;" onchange="importDictionary()">
+                <button class="btn-outline" style="border-color:var(--c1); color:var(--c1); width:100%; margin-bottom:10px;" onclick="document.getElementById('dict-upload').click()">Importar palabras</button>
+                <div id="library-dict-container" style="max-height:60vh; overflow-y:auto;"></div>
+            </div>
         </div>
     </div>
-    <div id="folders-accordion-container" style="display:flex; flex-direction:column;"></div>
+    <div id="drawer-settings" class="drawer-view">
+        <button class="btn-outline" style="width:auto; margin-bottom:15px;" onclick="showDrawerView('menu')">Volver</button>
+        <div class="input-box">
+            <div class="library-section-title">Ajustes</div>
+            <button class="btn-action" onclick="setThemeMode('dark')">Modo oscuro</button>
+            <button class="btn-outline" style="width:100%; margin-top:10px;" onclick="setThemeMode('light')">Modo claro</button>
+        </div>
+    </div>
+    <div id="drawer-info" class="drawer-view">
+        <button class="btn-outline" style="width:auto; margin-bottom:15px;" onclick="showDrawerView('menu')">Volver</button>
+        <div class="input-box" style="text-align:left;">
+            <div class="library-section-title">Cómo usar la app</div>
+            <p>Usa <b>Islas</b> para crear frases, <b>Shadow</b> para repetir en voz alta, <b>Recall</b> para recordar activamente y <b>Diccionario</b> para vocabulario.</p>
+            <div class="library-section-title">Integrar con IA</div>
+            <p>Pide a tu IA listas con el formato <b>#Carpeta: Tema</b> y pares <b>frase = significado</b>. Luego pega el resultado en el Importador Masivo de Islas.</p>
+            <div class="library-section-title">Instalar en Android</div>
+            <p>Abre la app en Chrome, toca el menú de tres puntos y elige <b>Instalar app</b> o <b>Añadir a pantalla principal</b>.</p>
+            <div class="library-section-title">Instalar en iOS</div>
+            <p>Abre la app en Safari, toca compartir y elige <b>Añadir a pantalla de inicio</b>.</p>
+        </div>
+    </div>
 </div>
 
 <div id="shadowing" class="content">
@@ -453,11 +470,11 @@
         <label style="font-size:0.75rem; color:var(--secondary); display:block; text-align:left; margin-bottom:5px;">Carpeta</label>
         <select id="recall-folder-select" style="margin-bottom:10px;"></select>
         <div id="recall-folder-mastery" style="font-size:0.85rem; color:var(--secondary); text-align:left; margin-bottom:10px;">Dominio: 0%</div>
-        <label style="font-size:0.75rem; color:var(--secondary); display:block; text-align:left; margin-bottom:5px;">Frases por bloque</label>
-        <input type="number" id="recall-limit" value="10" min="1" max="100" style="margin-bottom:15px; text-align:center" onchange="saveRecallLimit()">
         <button class="btn-action" onclick="startConfiguredRecall()">
             <svg class="icon-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg> Iniciar Recall
         </button>
+        <label style="font-size:0.75rem; color:var(--secondary); display:block; text-align:left; margin:12px 0 5px;">Frases para Ruleta Rápida</label>
+        <input type="number" id="recall-limit" value="10" min="1" max="100" style="margin-bottom:10px; text-align:center" onchange="saveRecallLimit()">
         <button class="btn-outline" style="margin-top:10px; width:100%; border-color:var(--glass-border); color:var(--secondary); background: rgba(255,255,255,0.03);" onclick="startRoulette('sentences')">
             <svg class="icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Ruleta Rápida
         </button>
@@ -501,7 +518,7 @@
 // ==========================================
 const allLanguages = { "af": "Afrikáans", "sq": "Albanés", "de": "Alemán", "am": "Amárico", "ar": "Árabe", "hy": "Armenio", "az": "Azerí", "bn": "Bengalí", "be": "Bielorruso", "my": "Birmano", "bs": "Bosnio", "bg": "Búlgaro", "km": "Jemer", "kn": "Canarés", "ca": "Catalán", "ceb": "Cebuano", "zh-CN": "Chino Simpl.", "zh-TW": "Chino Trad.", "si": "Cingalés", "ko": "Coreano", "co": "Corso", "ht": "Criollo haitiano", "hr": "Croata", "da": "Danés", "sk": "Eslovaco", "sl": "Esloveno", "es": "Español", "eo": "Esperanto", "et": "Estonio", "eu": "Euskera", "fi": "Finlandés", "fr": "Francés", "fy": "Frisón", "gd": "Gaélico escocés", "cy": "Galés", "gl": "Gallego", "ka": "Georgiano", "el": "Griego", "gu": "Guyaratí", "ha": "Hausa", "haw": "Hawaiano", "he": "Hebreo", "hi": "Hindi", "hmn": "Hmong", "hu": "Húngaro", "ig": "Igbo", "id": "Indonesio", "en": "Inglés", "ga": "Irlandés", "is": "Islandés", "it": "Italiano", "ja": "Japonés", "jv": "Javanés", "kk": "Kazajo", "rw": "Kinyarwanda", "ky": "Kirguís", "ku": "Kurdo", "lo": "Lao", "la": "Latín", "lv": "Letón", "lt": "Lituano", "lb": "Luxemburgués", "mk": "Macedonio", "ml": "Malayalam", "ms": "Malayo", "mg": "Malgache", "mt": "Maltés", "mi": "Maorí", "mr": "Maratí", "mn": "Mongol", "ne": "Nepalí", "no": "Noruego", "ny": "Nyanja", "or": "Oriya", "nl": "Holandés", "ps": "Pastún", "fa": "Persa", "pl": "Polaco", "pt": "Portugués", "pa": "Punjabí", "ro": "Rumano", "ru": "Ruso", "sm": "Samoano", "sr": "Serbio", "st": "Sesotho", "sn": "Shona", "sd": "Sindhi", "so": "Somalí", "sw": "Suajili", "sv": "Sueco", "su": "Sundanés", "tl": "Tagalo", "th": "Tailandés", "tg": "Tayiko", "ta": "Tamil", "tt": "Tártaro", "cs": "Checo", "te": "Telugu", "tr": "Turco", "tk": "Turcomano", "uk": "Ucraniano", "ur": "Urdu", "uz": "Uzbeco", "vi": "Vietnamita", "xh": "Xhosa", "yi": "Yidis", "yo": "Yoruba", "zu": "Zulú" };
 
-const APP_VERSION = 47.0;
+const APP_VERSION = 48.0;
 const STORAGE_KEY = 'islands_v17';
 const MAX_IMPORT_SIZE_BYTES = 5 * 1024 * 1024;
 let db;
@@ -612,8 +629,18 @@ function acceptUpdate() {
     db.appVersion = APP_VERSION;
     save();
     document.getElementById('update-overlay').style.display = 'none';
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => { for (let i of r) i.unregister(); }); }
-    location.reload();
+    clearRuntimeCaches().finally(() => location.reload());
+}
+
+async function clearRuntimeCaches() {
+    if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+    }
+    if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map(r => r.update()));
+    }
 }
 
 const appCanStart = initializeDatabase();
@@ -775,22 +802,57 @@ function closeAllSheets() {
     setTimeout(() => document.getElementById('action-overlay').classList.remove('open'), 300);
 }
 
-function openLibraryDrawer() {
+function openSideMenu() {
     document.getElementById('folders').classList.add('open');
     document.getElementById('library-overlay').classList.add('open');
+    showDrawerView('menu');
     renderFolders();
     renderLibraryDictionary();
 }
 
-function closeLibraryDrawer() {
+function closeSideMenu() {
     document.getElementById('folders').classList.remove('open');
     document.getElementById('library-overlay').classList.remove('open');
 }
 
-function toggleThemeMode() {
-    const enabled = !document.body.classList.contains('light-mode');
-    document.body.classList.toggle('light-mode', enabled);
-    localStorage.setItem('polyglot_theme', enabled ? 'light' : 'dark');
+function openLibraryDrawer() {
+    openSideMenu();
+    showDrawerView('library');
+}
+
+function closeLibraryDrawer() {
+    closeSideMenu();
+}
+
+function showDrawerView(view) {
+    document.querySelectorAll('.drawer-view').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById(`drawer-${view}`);
+    if (target) target.classList.add('active');
+    const titles = {
+        menu: ["Menú", "Herramientas y gestión"],
+        timer: ["Temporizador", "Bloques de enfoque"],
+        library: ["Biblioteca", "Frases y diccionario"],
+        settings: ["Ajustes", "Preferencias visuales"],
+        info: ["Info", "Guías de uso e instalación"]
+    };
+    const t = titles[view] || titles.menu;
+    document.getElementById('drawer-title').innerText = t[0];
+    document.getElementById('drawer-subtitle').innerText = t[1];
+    if (view === 'library') { renderFolders(); renderLibraryDictionary(); }
+}
+
+function showLibraryTab(tab) {
+    document.getElementById('library-phrases-panel').style.display = tab === 'phrases' ? 'block' : 'none';
+    document.getElementById('library-dict-panel').style.display = tab === 'dict' ? 'block' : 'none';
+    document.getElementById('library-tab-phrases').classList.toggle('active', tab === 'phrases');
+    document.getElementById('library-tab-dict').classList.toggle('active', tab === 'dict');
+    if (tab === 'dict') renderLibraryDictionary();
+}
+
+function setThemeMode(mode) {
+    document.body.classList.toggle('light-mode', mode === 'light');
+    localStorage.setItem('polyglot_theme', mode === 'light' ? 'light' : 'dark');
+    showToast(mode === 'light' ? "Modo claro activado" : "Modo oscuro activado");
 }
 
 function applyThemePreference() {
@@ -1433,7 +1495,6 @@ function renderDictList() {
                 <div style="display:flex; gap:5px; align-items:center;">
                     <button class="speed-btn" onclick="toggleBtnSpeed(this)">1.0x</button>
                     <button class="btn-audio" data-audio="${escAttr(w.target)}"><svg class="icon-play icon-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
-                    <button class="btn-audio" style="background:var(--c1); color:#000;" onclick="openFolderSheet('save_dict', {target: ${JSON.stringify(w.target)}, es: ${JSON.stringify(w.es)}})"><svg class="icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
                     <button class="btn-mini-action btn-mini-delete" onclick="deleteDictWord(${w._idx})"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                 </div>
             </div>
@@ -1700,7 +1761,6 @@ function startConfiguredRecall() {
     const lang = document.getElementById('lang-select').value;
     const select = document.getElementById('recall-folder-select');
     const folder = select ? select.value : "Todo";
-    saveRecallLimit();
     let pool = getFolderPracticePool(folder, lang);
     if (pool.length === 0) return alert("Carpeta vacía en este idioma.");
     pool = pool.sort(() => Math.random() - 0.5).sort((a, b) => {
@@ -1710,7 +1770,7 @@ function startConfiguredRecall() {
         if (sB < 3 && sA === 3) return 1;
         return sA - sB;
     });
-    initPracticeSession(pool.slice(0, db.recallLimit), 'sentences');
+    initPracticeSession(pool, 'sentences');
 }
 
 function startRoulette(type) {
@@ -1824,10 +1884,6 @@ function closeReport() {
 }
 
 let timer; let timeLeft = 25 * 60; let isTimerRunning = false;
-function toggleTimerPanel() {
-    const p = document.getElementById('timer-panel');
-    p.style.display = p.style.display === 'block' ? 'none' : 'block';
-}
 
 function toggleTimer() {
     const btn = document.getElementById('timer-start-btn');
@@ -1857,7 +1913,11 @@ if (!requiresUpdate) {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registrado', reg))
+            .then(reg => {
+                reg.update();
+                if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                console.log('Service Worker registrado', reg);
+            })
             .catch(err => console.log('Error al registrar SW', err));
     });
 }
